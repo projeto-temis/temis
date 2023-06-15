@@ -219,4 +219,15 @@ ul.blog-tags l1:hover i {
 .invalid-feedback {
   margin-top: 0 !important;
 }
+
+div#sidebar p {
+  margin: 0;
+}
+div#sidebar p span.topic-caption {
+  font-weight: bold;
+  color: #bbb;
+}
+div#sidebar p span.topic-separator {
+  color: #bbb;
+}
 </style>

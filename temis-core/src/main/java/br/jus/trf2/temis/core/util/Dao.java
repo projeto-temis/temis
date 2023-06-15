@@ -25,6 +25,7 @@ import com.crivano.swaggerservlet.SwaggerUtils;
 
 import br.jus.trf2.temis.core.Arquivo;
 import br.jus.trf2.temis.core.Entidade;
+import br.jus.trf2.temis.core.Evento;
 import br.jus.trf2.temis.core.IEntidade;
 import br.jus.trf2.temis.iam.model.Endereco;
 import br.jus.trf2.temis.iam.model.Pessoa;
@@ -107,17 +108,19 @@ public class Dao {
 
 					// lista marcada com @OneToMany
 					if (o2m != null && Utils.sorn(o2m.mappedBy()) != null) {
-						Collection<IEntidade> l = (Collection<IEntidade>) fld.get(oldData);
+						Collection<Object> l = (Collection<Object>) fld.get(oldData);
 						if (l != null) {
 							int i = 0;
-							for (IEntidade oOld : l) {
-								if (oOld.getTermino() != null)
-									continue;
-								// Acrescenta as entidades antigas na lista velha para sincronismo.
-								// Isso não parece fazer muito sentido, pois se a entidade é nova, imagino que
-								// as listas de entidades subordinadas não devam vir preenchidas com entidades
-								// existentes no banco.
-								sync.addOld(oOld);
+							for (Object oOld : l) {
+								if (oOld instanceof IEntidade) {
+									if (((IEntidade) oOld).getTermino() != null)
+										continue;
+									// Acrescenta as entidades antigas na lista velha para sincronismo.
+									// Isso não parece fazer muito sentido, pois se a entidade é nova, imagino que
+									// as listas de entidades subordinadas não devam vir preenchidas com entidades
+									// existentes no banco.
+									sync.addOld((IEntidade) oOld);
+								}
 							}
 						}
 					}
@@ -147,10 +150,13 @@ public class Dao {
 
 				// lista marcada com @OneToMany
 				if (o2m != null && Utils.sorn(o2m.mappedBy()) != null) {
-					Collection<Entidade> l = (Collection<Entidade>) fld.get(data);
+					Collection<Object> l = (Collection<Object>) fld.get(data);
 					if (l != null) {
 						int i = 0;
-						for (Entidade oOrig : l) {
+						for (Object oOriginal : l) {
+							if (!(oOriginal instanceof Entidade))
+								return;
+							Entidade oOrig = (Entidade) oOriginal;
 							// Atribui o campo de ordenação, começando por 1
 							i++;
 							Global juiaGlobal = oOrig.getClass().getAnnotation(Global.class);
@@ -202,6 +208,21 @@ public class Dao {
 				public Entidade update(Entidade antigo, Entidade novo) {
 					SwaggerUtils.log(Dao.class).info("alterando: " + novo.toString());
 					novo.setIdInicial(antigo.getIdInicial());
+
+					// Transfere os eventos para essa nova entidade
+					try {
+						String mappedBy = null;
+						OneToMany o2m = antigo.getClass().getDeclaredField("evento").getAnnotation(OneToMany.class);
+						if (o2m != null && Utils.sorn(o2m.mappedBy()) != null)
+							mappedBy = o2m.mappedBy();
+						for (Evento evt : antigo.getEvento()) {
+							for (Field fld : ModeloUtils.getFieldList(evt.getClass()))
+								if (fld.getName().equals(mappedBy))
+									fld.set(evt, novo);
+						}
+					} catch (Exception e) {
+						throw new RuntimeException("Não consegui transferir eventos", e);
+					}
 					em.persist(novo);
 					return novo;
 				}

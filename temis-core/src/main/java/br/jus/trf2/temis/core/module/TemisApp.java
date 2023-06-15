@@ -18,8 +18,11 @@ import javax.enterprise.context.Initialized;
 import javax.enterprise.event.Observes;
 import javax.inject.Inject;
 
+import com.crivano.juia.AnnotationViewBuilder;
+
 import br.jus.trf2.temis.core.util.MimeTypeEnum;
 import br.jus.trf2.temis.core.util.SigaEntityManagerFactory;
+import br.jus.trf2.temis.core.util.TemisCaptionBuilder;
 import br.jus.trf2.temis.core.util.Utils;
 
 @ApplicationScoped
@@ -40,6 +43,7 @@ public class TemisApp {
 	}
 
 	public void onStart(@Observes @Initialized(ApplicationScoped.class) Object pointless) {
+		AnnotationViewBuilder.setCaptionBuilder(new TemisCaptionBuilder());
 	}
 
 //	public static TemisApp getInstance() {

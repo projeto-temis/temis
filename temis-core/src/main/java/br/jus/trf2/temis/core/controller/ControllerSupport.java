@@ -220,8 +220,9 @@ public abstract class ControllerSupport<T extends IEntidade> {
 		VisibilidadeDeEventoEnum visibilidade;
 
 		SortedSet<DtoAcao> action;
-		public Long idDesativador;
-		public Long idCancelador;
+		Long idDesativador;
+		Long idCancelador;
+		Long idReferente;
 	}
 
 	private static class DtoDadosEAcoes {
@@ -264,6 +265,8 @@ public abstract class ControllerSupport<T extends IEntidade> {
 					a.idDesativador = evento.getDesativador().getId();
 				if (evento.getCancelador() != null)
 					a.idCancelador = evento.getCancelador().getId();
+				if (evento.getReferente() != null)
+					a.idReferente = evento.getReferente().getId();
 				a.dt = evento.getDtIni();
 				a.tempoRelativo = DataUtils.calcularTempoRelativo(evento.getDtIni());
 				a.titulo = evento.getTitulo();

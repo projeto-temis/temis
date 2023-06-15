@@ -2,6 +2,7 @@ export default {
     formdata: function (obj) {
         var s = "";
         var f = function (prefix, jsonObj) {
+            if (prefix && prefix.startsWith('data.evento')) return;
             if (typeof jsonObj == "object" && jsonObj !== null) {
                 for (const [k, v] of Object.entries(jsonObj)) {
                     if (k == "$$hashKey" || v === null)

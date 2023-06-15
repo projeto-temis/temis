@@ -14,6 +14,7 @@ import br.jus.trf2.temis.core.ArquivoPng;
 import br.jus.trf2.temis.core.Entidade;
 import br.jus.trf2.temis.core.Etiqueta;
 import br.jus.trf2.temis.core.Evento;
+import br.jus.trf2.temis.core.ProximoCodigo;
 import br.jus.trf2.temis.core.util.CustomImplicitNamingStrategy;
 import br.jus.trf2.temis.core.util.CustomPhysicalNamingStrategy;
 import br.jus.trf2.temis.crp.model.CrpLotacao;
@@ -70,6 +71,7 @@ public class TemisEntityManagerFactory extends SigaEntityManagerFactoryImpl {
 
 		addClass(Entidade.class);
 		addClass(Etiqueta.class);
+		addClass(ProximoCodigo.class);
 
 		addClass(CrpPessoa.class);
 		addClass(CrpLotacao.class);

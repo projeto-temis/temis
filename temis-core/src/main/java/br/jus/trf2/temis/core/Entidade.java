@@ -6,10 +6,14 @@ import java.util.Date;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+import javax.enterprise.context.RequestScoped;
+import javax.enterprise.inject.spi.BeanManager;
+import javax.enterprise.inject.spi.CDI;
 import javax.persistence.CascadeType;
 import javax.persistence.DiscriminatorColumn;
 import javax.persistence.DiscriminatorType;
 import javax.persistence.Entity;
+import javax.persistence.EntityManager;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -18,10 +22,12 @@ import javax.persistence.InheritanceType;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
+import javax.persistence.PrePersist;
 
 import com.crivano.jbiz.IEvent;
 import com.crivano.jsync.IgnoreForSimilarity;
 import com.crivano.juia.annotations.Edit;
+import com.crivano.juia.annotations.Search;
 import com.crivano.juia.util.JuiaUtils;
 
 import br.jus.trf2.temis.core.util.ContextInterceptor;
@@ -56,6 +62,9 @@ public abstract class Entidade implements IEntidade {
 	@IgnoreForSimilarity
 	private Long idInicial;
 
+	@Search
+	private String codigo;
+
 	@ManyToOne
 	private Pessoa pessoaCadastrante;
 	@ManyToOne
@@ -81,6 +90,37 @@ public abstract class Entidade implements IEntidade {
 		if (getId() == null)
 			return null;
 		return getId().toString();
+	}
+
+	@PrePersist
+	public void onSave() {
+		if (codigo == null && getCodePrefix() != null)
+			codigo = buildCode();
+	}
+
+	@Override
+	public String buildCode() {
+		String prefix = getCodePrefixWithYear();
+		if (prefix == null)
+			return null;
+		int counter = getProximoCodigo(prefix);
+		return prefix + String.format("%06d", counter) + getCodeSufix();
+
+	}
+
+	public int getProximoCodigo(final String prefix) {
+		BeanManager beanManager = CDI.current().getBeanManager();
+		beanManager.getContext(RequestScoped.class).get(beanManager.resolve(beanManager.getBeans(EntityManager.class)));
+
+		ProximoCodigo c = ProximoCodigo.AR.findOneBy(ProximoCodigo.Fields.prefixo, prefix);
+		if (c == null) {
+			c = new ProximoCodigo();
+			c.setPrefixo(prefix);
+			c.setContador(0);
+			ProximoCodigo.AR.em().persist(c);
+		}
+		c.setContador(c.getContador() + 1);
+		return c.getContador();
 	}
 
 	@Override

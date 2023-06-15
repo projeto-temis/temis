@@ -17,6 +17,9 @@ import javax.validation.constraints.NotNull;
 
 import org.joda.time.LocalDate;
 
+import com.crivano.jsync.IgnoreForSimilarity;
+import com.crivano.juia.annotations.Detail;
+import com.crivano.juia.annotations.DetailGroup;
 import com.crivano.juia.annotations.Edit;
 import com.crivano.juia.annotations.EditKindEnum;
 import com.crivano.juia.annotations.FieldSet;
@@ -95,6 +98,7 @@ public class CaeAtividade extends Entidade {
 		}
 	}
 
+	@IgnoreForSimilarity
 	@OneToMany(mappedBy = CaeEventoDeAtividade.Fields.atividade, cascade = CascadeType.ALL)
 	@OrderBy(Evento.Fields.dtIni)
 	private SortedSet<CaeEventoDeAtividade> evento = new TreeSet<>();
@@ -115,7 +119,6 @@ public class CaeAtividade extends Entidade {
 	CaeTipoDeAtividadeEnum tipo;
 
 	@Search
-	@Show
 	@Edit(caption = "Temática", colM = 3)
 	@ManyToOne(fetch = FetchType.LAZY)
 //	@NotNull
@@ -126,14 +129,16 @@ public class CaeAtividade extends Entidade {
 	CaeParticipacaoEnum participacao;
 
 	@Search
-	@ShowGroup(caption = "")
-	@Show
+	@ShowGroup(caption = "{{data.tema}}")
+	@DetailGroup(caption = "Informações")
+	@Detail
 	@NotNull
 	@Edit(caption = "Tema", colM = 6)
 	String tema;
 
 	@Search
 	@NotNull
+	@Detail
 	@Edit(caption = "Número de Vagas", colM = 3)
 	Integer vagas;
 
@@ -150,6 +155,7 @@ public class CaeAtividade extends Entidade {
 	Integer cargaHorariaOab;
 
 	@NotNull
+	@Detail
 	@Edit(caption = "Local", colM = 3)
 	String local;
 
@@ -168,37 +174,38 @@ public class CaeAtividade extends Entidade {
 	@Search
 	@FieldSet(caption = "Datas")
 	@NotNull
+	@Detail
 	@Edit(colM = 3)
 	LocalDate dataDeInicio;
 
 	@NotNull
+	@Detail
 	@Edit(colM = 3)
 	LocalDate dataDeFim;
 
 	@NotNull
+	@Detail
 	@Edit(colM = 3)
 	LocalDate dataDeAberturaDasInscricoes;
 
 	@NotNull
+	@Detail
 	@Edit(colM = 3)
 	LocalDate dataDeEncerramentoDasInscricoes;
 
 	@FieldSet(caption = "Informações Complementares")
-	@ShowGroup(caption = "")
-	@Show
 	@NotNull
+	@Detail
 	@Edit(caption = "Público Alvo", kind = EditKindEnum.TEXTAREA, colM = 12)
 	String publicoAlvo;
 
-	@ShowGroup(caption = "")
-	@Show
 	@NotNull
+	@Detail
 	@Edit(caption = "Descrição", kind = EditKindEnum.TEXTAREA, colM = 12)
 	String descricao;
 
-	@ShowGroup(caption = "")
-	@Show
 	@NotNull
+	@Detail
 	@Edit(caption = "Observações", kind = EditKindEnum.TEXTAREA, colM = 12)
 	String obs;
 
@@ -229,7 +236,11 @@ public class CaeAtividade extends Entidade {
 	@Override
 	public String getSelectFirstLine() {
 		return descricao;
+	}
 
+	@Override
+	public String getTitle() {
+		return tema;
 	}
 
 	@Override

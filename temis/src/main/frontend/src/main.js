@@ -196,6 +196,9 @@ Vue.use(VueNumeric)
 
 Vue.config.productionTip = false
 
+import CaeAtividadeShow from './components/cae/AtividadeShow.vue'
+Vue.component('CaeAtividadeShow', CaeAtividadeShow);
+
 import ProcessoShow from './components/ProcessoShow.vue'
 Vue.component('ProcessoShow', ProcessoShow);
 
