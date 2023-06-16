@@ -5,20 +5,33 @@ import java.util.SortedSet;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 
+import org.joda.time.LocalDate;
+
 import com.crivano.juia.annotations.Edit;
 import com.crivano.juia.annotations.Global;
 import com.crivano.juia.annotations.Global.Gender;
 import com.crivano.juia.annotations.Required;
 
 import br.jus.trf2.temis.cae.model.CaeAtividade;
+import br.jus.trf2.temis.cae.model.CaeTematica;
+import br.jus.trf2.temis.cae.model.CaeAtividade.CaeEventoDeAtividade;
+import br.jus.trf2.temis.cae.model.enm.CaeEspecieDeAtividadeEnum;
+import br.jus.trf2.temis.cae.model.enm.CaeModalidadeEnum;
+import br.jus.trf2.temis.cae.model.enm.CaeOrgaoEnum;
+import br.jus.trf2.temis.cae.model.enm.CaeParticipacaoEnum;
+import br.jus.trf2.temis.cae.model.enm.CaeTipoDeAtividadeEnum;
+import br.jus.trf2.temis.cae.model.enm.CaeTurnoEnum;
 import br.jus.trf2.temis.core.Acao;
 import br.jus.trf2.temis.core.action.ExcluirMiniAction;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
+import lombok.Setter;
 
 @Entity
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @Global(singular = "Anotação", plural = "Anotações", gender = Gender.SHE, action = "Anotar", icon = "far fa-sticky-note")
 public class CaeEventoDeAtividadeAnotacao extends CaeAtividade.CaeEventoDeAtividade {

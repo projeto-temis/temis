@@ -208,18 +208,24 @@ public class Dao {
 				public Entidade update(Entidade antigo, Entidade novo) {
 					SwaggerUtils.log(Dao.class).info("alterando: " + novo.toString());
 					novo.setIdInicial(antigo.getIdInicial());
-
+					
+					// Remove a id para que seja criado um novo registro
+//					novo.setId(null);
+					
 					// Transfere os eventos para essa nova entidade
 					try {
-						String mappedBy = null;
-						OneToMany o2m = antigo.getClass().getDeclaredField("evento").getAnnotation(OneToMany.class);
-						if (o2m != null && Utils.sorn(o2m.mappedBy()) != null)
-							mappedBy = o2m.mappedBy();
-						for (Evento evt : antigo.getEvento()) {
-							for (Field fld : ModeloUtils.getFieldList(evt.getClass()))
-								if (fld.getName().equals(mappedBy))
-									fld.set(evt, novo);
-						}
+						for (Field fld : ModeloUtils.getFieldList(antigo.getClass()))
+							if (fld.getName().equals("evento")) {
+								OneToMany o2m = fld.getAnnotation(OneToMany.class);
+								if (o2m != null && Utils.sorn(o2m.mappedBy()) != null) {
+									String mappedBy = o2m.mappedBy();
+									for (Evento evt : antigo.getEvento()) {
+										for (Field fld2 : ModeloUtils.getFieldList(evt.getClass()))
+											if (fld2.getName().equals(mappedBy))
+												fld2.set(evt, novo);
+									}
+								}
+							}
 					} catch (Exception e) {
 						throw new RuntimeException("Não consegui transferir eventos", e);
 					}
@@ -227,7 +233,9 @@ public class Dao {
 					return novo;
 				}
 			});
-		} catch (Exception ex) {
+		} catch (
+
+		Exception ex) {
 			throw new RuntimeException(ex);
 		}
 	}

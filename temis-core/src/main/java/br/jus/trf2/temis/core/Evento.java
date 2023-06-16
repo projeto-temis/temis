@@ -35,7 +35,7 @@ import lombok.experimental.FieldNameConstants;
 @MappedSuperclass
 @Data
 @FieldNameConstants
-public abstract class Evento<E extends IEntidade, V extends Evento<E, V>> implements
+public abstract class Evento<E extends IEntidade, V extends Evento<E, V>> extends Objeto implements
 		IJuiaEvent<E, Agente, V, Acao<E, Agente, V>, Etiqueta>, Acao<E, Agente, V>, Comparable<Evento<E, ?>> {
 	@IgnoreForSimilarity
 	@Id

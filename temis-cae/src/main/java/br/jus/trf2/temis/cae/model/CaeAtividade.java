@@ -49,11 +49,14 @@ import br.jus.trf2.temis.core.action.Editar;
 import br.jus.trf2.temis.core.util.NoSerialization;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.experimental.FieldNameConstants;
 
 @Entity
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @EqualsAndHashCode
 @FieldNameConstants
@@ -64,8 +67,8 @@ public class CaeAtividade extends Entidade {
 	@Entity
 	@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 	@DiscriminatorColumn(discriminatorType = DiscriminatorType.STRING, length = 64)
-	@Data
-	@EqualsAndHashCode
+	@Getter
+	@Setter
 	@FieldNameConstants
 	@Global(singular = "Evento de Atividade", plural = "Eventos de Atividades", gender = Gender.HE, codePrefix = "EA")
 	public abstract static class CaeEventoDeAtividade extends Evento<CaeAtividade, CaeEventoDeAtividade> {
@@ -129,7 +132,7 @@ public class CaeAtividade extends Entidade {
 	CaeParticipacaoEnum participacao;
 
 	@Search
-	@ShowGroup(caption = "{{data.tema}}")
+	@ShowGroup(caption = "{{data.codigo + ' - ' + data.tema}}")
 	@DetailGroup(caption = "Informações")
 	@Detail
 	@NotNull
@@ -240,7 +243,7 @@ public class CaeAtividade extends Entidade {
 
 	@Override
 	public String getTitle() {
-		return tema;
+		return getCodigo() + " - " + tema;
 	}
 
 	@Override

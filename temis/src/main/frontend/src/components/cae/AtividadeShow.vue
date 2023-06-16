@@ -5,7 +5,7 @@
         <tr>
           <th>Participante</th>
           <th>Situação</th>
-          <th>Just.</th>
+          <th>Justificativa</th>
           <th style="text-align:center;">Deferir</th>
           <th style="text-align:center;">Indeferir</th>
           <th style="text-align:center;">Aprovar</th>

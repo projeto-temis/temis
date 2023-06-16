@@ -17,13 +17,13 @@ import br.jus.trf2.temis.core.action.CancelarMiniAction;
 import br.jus.trf2.temis.core.action.ExcluirMiniAction;
 import br.jus.trf2.temis.core.util.DescrBuilder;
 import br.jus.trf2.temis.crp.model.CrpPessoa;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.Getter;
 import lombok.NonNull;
+import lombok.Setter;
 
 @Entity
-@Data
-@NoArgsConstructor
+@Getter
+@Setter
 @Global(singular = "Indeferimento de Inscrição", plural = "Indeferimentos de Inscrições", gender = Gender.SHE, action = "Indeferir", icon = "fas fa-calendar-times")
 public class CaeEventoDeAtividadeIndeferimento extends CaeEventoDeAtividade {
 

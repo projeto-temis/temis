@@ -78,9 +78,10 @@ export default {
                 });
         },
         addProxy: function(prefix, o, k, v) {
-            if (this.dataProxies[prefix] === undefined) {
-                this.dataProxies[prefix] = v;
+            if (this.dataProxies[prefix + "-" + k] === undefined) {
+                this.dataProxies[prefix + "-" + k] = v;
                 delete o[k];
+                // console.log("6) prefix:" + prefix + ", obj:" + JSON.stringify(o) + ", k:" + k + ", v: " + JSON.stringify(v))
                 this.$set(o, k, v);
             }
         },
@@ -92,11 +93,15 @@ export default {
             var obj = (variable !== undefined) ? variable : this.data;
             var s = "";
             var f = (prefix, jsonObj) => {
+                // console.log("1) " + prefix + ": " + JSON.stringify(jsonObj))
                 if (typeof jsonObj == "object" && jsonObj !== null) {
+                    // console.log("2) " + prefix + ": " + JSON.stringify(jsonObj))
                     for (const [k, v] of Object.entries(jsonObj)) {
+                        // console.log("3) " + prefix + ": " + k + ": " + JSON.stringify(v))
                         if (k == "$$hashKey" || v === null)
                             return;
                         if (typeof v == "object" && v !== null) {
+                            // console.log("4) " + prefix + ": " + k + ": " + JSON.stringify(v))
                             var nextprefix = prefix;
                             if (Array.isArray(jsonObj)) {
                                 if (prefix.endsWith(".")) {
@@ -105,9 +110,11 @@ export default {
                                 nextprefix += "[" + k + "].";
                             } else
                                 nextprefix += k + ".";
-                            f(nextprefix, v);
-                            this.addProxy(prefix, jsonObj, k, v);
+                                // console.log("5) prefix:" + prefix + ", obj:" + JSON.stringify(jsonObj) + ", k:" + k + ", v: " + JSON.stringify(v))
+                                this.addProxy(prefix, jsonObj, k, v);
+                                f(nextprefix, v);
                         } else if (Array.isArray(jsonObj)) {
+                            // console.log("4arr) " + prefix + ": " + k + ": " + JSON.stringify(v))
                             if (prefix.endsWith(".")) {
                                 nextprefix = prefix.substring(0, prefix.length - 1);
                             }
@@ -116,6 +123,7 @@ export default {
                             s += nextprefix + "[" + k + "]=" + v;
                             this.addProxy(nextprefix + "[" + k + "]", jsonObj, k, v);
                         } else {
+                            // console.log("4noobj) " + prefix + ": " + k + ": " + JSON.stringify(v))
                             if (s != "")
                                 s = s + "&";
                             s = s + prefix + k + "=" + encodeURIComponent(v);
@@ -126,7 +134,7 @@ export default {
             }
 
             f("", obj);
-            console.log(this.dataProxies)
+            // console.log(this.dataProxies)
         },
         reproxyold: function(v) {
             if (v === undefined) v = this.data;

@@ -1,8 +1,11 @@
 package br.jus.trf2.temis.core;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.util.Collection;
 import java.util.Date;
+import java.util.IdentityHashMap;
+import java.util.Map;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
@@ -43,7 +46,7 @@ import lombok.experimental.FieldNameConstants;
 @DiscriminatorColumn(discriminatorType = DiscriminatorType.STRING, length = 50)
 @Data
 @FieldNameConstants
-public abstract class Entidade implements IEntidade {
+public abstract class Entidade extends Objeto implements IEntidade {
 
 	@IgnoreForSimilarity
 	@Id

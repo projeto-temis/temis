@@ -134,11 +134,11 @@ li.blog-tags-enabled-false:hover i {
 }
 
 li.blog-tags-enabled-false {
-  color: #a7a7a7 !important;
+  color: #ccc !important;
 }
 
 li.blog-tags-enabled-false i {
-  color: #a7a7a7 !important;
+  color: #ddd !important;
 }
 
 .blog-tags-required i {

@@ -16,6 +16,8 @@ public class CaePodeAprovarParticipacaoEmAtividade extends CompositeExpressionSu
 	protected Expression create() {
 		Expression e = And.of(
 
+				CaeParticipacaoEmAtividadeEstaDeferida.of(evento),
+
 				Not.of(CaeParticipacaoEmAtividadeEstaAprovada.of(evento)),
 
 				Not.of(CaeParticipacaoEmAtividadeEstaReprovada.of(evento)));

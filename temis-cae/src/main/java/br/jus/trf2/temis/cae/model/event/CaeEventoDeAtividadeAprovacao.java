@@ -14,20 +14,19 @@ import br.jus.trf2.temis.core.action.CancelarMiniAction;
 import br.jus.trf2.temis.core.action.ExcluirMiniAction;
 import br.jus.trf2.temis.core.util.DescrBuilder;
 import br.jus.trf2.temis.crp.model.CrpPessoa;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.Getter;
 import lombok.NonNull;
+import lombok.Setter;
 
 @Entity
-@Data
-@NoArgsConstructor
+@Getter
+@Setter
 @Global(singular = "Aprovação", plural = "Aprovações", gender = Gender.SHE, action = "Aprovar", icon = "fas fa-check")
 public class CaeEventoDeAtividadeAprovacao extends CaeEventoDeAtividade {
 
 	@Override
 	public String getDescr() {
-		CaeEventoDeAtividadeDeferimento deferimento = (CaeEventoDeAtividadeDeferimento) getReferente();
-		CaeEventoDeAtividadeInscricao inscricao = (CaeEventoDeAtividadeInscricao) deferimento.getReferente();
+		CaeEventoDeAtividadeInscricao inscricao = (CaeEventoDeAtividadeInscricao) getReferente();
 
 		@NonNull
 		CrpPessoa pessoa = inscricao.getPessoa();

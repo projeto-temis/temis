@@ -7,23 +7,19 @@ import java.util.SortedSet;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.validation.constraints.NotNull;
 
 import com.crivano.jsync.IgnoreForDependecyLevel;
 import com.crivano.jsync.IgnoreForSimilarity;
+import com.crivano.jsync.IgnoreForSimilarityIfDependent;
 import com.crivano.juia.annotations.Edit;
 import com.crivano.juia.annotations.FieldSet;
 import com.crivano.juia.annotations.Global;
 import com.crivano.juia.annotations.Global.Gender;
 import com.crivano.juia.annotations.Menu;
 import com.crivano.juia.annotations.Search;
-import com.crivano.juia.annotations.Show;
-import com.crivano.juia.annotations.ShowGroup;
 import com.crivano.juia.biz.IJuiaAction;
 
 import br.jus.trf2.temis.cae.model.enm.CaeMultiplicadorDeConvolacaoEnum;
@@ -31,36 +27,32 @@ import br.jus.trf2.temis.cae.model.enm.CaeTipoDeAtividadeEnum;
 import br.jus.trf2.temis.core.Entidade;
 import br.jus.trf2.temis.core.action.Auditar;
 import br.jus.trf2.temis.core.action.Editar;
-import br.jus.trf2.temis.core.util.FullSerialization;
+import br.jus.trf2.temis.core.util.NoSerialization;
 import br.jus.trf2.temis.crp.model.CrpPessoa;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.NonNull;
+import lombok.Setter;
 import lombok.experimental.FieldNameConstants;
 
 @Entity
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
-@EqualsAndHashCode
 @FieldNameConstants
 @Menu(list = true)
 @Global(singular = "Convolação", plural = "Convolações", gender = Gender.SHE, locator = "cae-convolacao", codePrefix = "CN", deletable = true)
 public class CaeConvolacao extends Entidade {
 
 	@Entity
-	@Data
+	@Getter
+	@Setter
 	@NoArgsConstructor
-	@EqualsAndHashCode
 	@FieldNameConstants
-	@Global(singular = "Atividade", plural = "Atividades", gender = Gender.SHE, locator = "pro-convolacao-x-atividade", codePrefix = "CA", deletable = true)
+	@Global(singular = "Atividade", plural = "Atividades", gender = Gender.SHE, locator = "pro-convolacao-x-atividade", deletable = true)
 	public static class XTipoDeAtividade extends Entidade {
-
-		@Id
-		@GeneratedValue(strategy = GenerationType.IDENTITY)
-		private Long id;
-
 		@ManyToOne(fetch = FetchType.LAZY)
+		@NoSerialization
+		@IgnoreForSimilarityIfDependent
 		private CaeConvolacao convolacao;
 
 		@NotNull
@@ -73,6 +65,11 @@ public class CaeConvolacao extends Entidade {
 
 		@Edit(caption = "Observações", colM = 3)
 		String obs;
+
+		@Override
+		public String toString() {
+			return multiplicador + " - " + tipo + " - " + obs;
+		}
 	}
 
 	@Edit(caption = "Magistrado", colM = 6)
@@ -83,10 +80,9 @@ public class CaeConvolacao extends Entidade {
 	@Search
 	@NotNull
 	@Edit(colM = 3)
-	int ano;
+	Integer ano;
 
 	@Search
-	@Show
 	@NotNull
 	@Edit(colM = 8)
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -98,7 +94,6 @@ public class CaeConvolacao extends Entidade {
 	@IgnoreForDependecyLevel
 	@IgnoreForSimilarity
 	@OneToMany(mappedBy = "convolacao", cascade = CascadeType.ALL)
-	@Show(caption = "Tipos de Atividades", value = "__fieldname__.logradouro + ' ' + __fieldname__.numero + (__fieldname__.complemento ? '/' + __fieldname__.complemento : '') + ', ' + __fieldname__.bairro + ', ' + __fieldname__.localidade + '/' + __fieldname__.uf + '. CEP: ' + __fieldname__.cep")
 	@FieldSet(caption = "Tipos de Atividades")
 	@Edit()
 	private List<XTipoDeAtividade> tipoDeAtividade = new ArrayList<>();
@@ -116,6 +111,11 @@ public class CaeConvolacao extends Entidade {
 	@Override
 	public String getSelectFirstLine() {
 		return getDescr();
+	}
+
+	@Override
+	public String getTitle() {
+		return getCodigo() + " - " + getDescr();
 	}
 
 	@Override

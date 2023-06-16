@@ -13,36 +13,39 @@ import com.crivano.juia.annotations.Global;
 import com.crivano.juia.annotations.Global.Gender;
 import com.crivano.juia.annotations.Menu;
 import com.crivano.juia.annotations.Search;
-import com.crivano.juia.annotations.Show;
-import com.crivano.juia.annotations.ShowGroup;
 import com.crivano.juia.biz.IJuiaAction;
 
+import br.jus.trf2.temis.cae.model.CaeAtividade.CaeEventoDeAtividade;
+import br.jus.trf2.temis.cae.model.enm.CaeEspecieDeAtividadeEnum;
+import br.jus.trf2.temis.cae.model.enm.CaeModalidadeEnum;
+import br.jus.trf2.temis.cae.model.enm.CaeOrgaoEnum;
+import br.jus.trf2.temis.cae.model.enm.CaeParticipacaoEnum;
+import br.jus.trf2.temis.cae.model.enm.CaeTipoDeAtividadeEnum;
+import br.jus.trf2.temis.cae.model.enm.CaeTurnoEnum;
 import br.jus.trf2.temis.core.Entidade;
 import br.jus.trf2.temis.core.action.Auditar;
 import br.jus.trf2.temis.core.action.Editar;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.experimental.FieldNameConstants;
 
 @Entity
-@Data
-@NoArgsConstructor
-@EqualsAndHashCode
+@Getter
+@Setter
 @FieldNameConstants
 @Menu(list = true)
 @Global(singular = "Comissão Temática", plural = "Comissões Temáticas", gender = Gender.SHE, locator = "cae-tematica", codePrefix = "TM", deletable = true, inactivable = true)
 public class CaeTematica extends Entidade {
 
 	@Search
-	@ShowGroup(caption = "")
-	@Show
 	@NotNull
 	@Edit(caption = "Nome", colM = 6)
 	String nome;
 
 	@Search
-	@FieldSet(caption = "Datas")
 	@NotNull
 	@Edit(colM = 3)
 	LocalDate dataDeInicio;
@@ -65,7 +68,11 @@ public class CaeTematica extends Entidade {
 	@Override
 	public String getSelectFirstLine() {
 		return nome;
+	}
 
+	@Override
+	public String getTitle() {
+		return getCodigo() + " - " + nome;
 	}
 
 	@Override

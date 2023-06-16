@@ -1250,8 +1250,11 @@ public abstract class ControllerSupport<T extends IEntidade> {
 		script += "  	return {\n";
 		script += "  		locator: '__LOCATOR__',\n";
 		script += "  		clazz: '__CLASS__',\n";
-		if ("list".equals(kind))
-			script += "  		filter: undefined,\n";
+		if ("list".equals(kind)) {
+			script += "         filter: undefined,\n";
+            script += "         skipShow: __SKIP_SHOW__,\n";
+            script += "         skipEdit: __SKIP_EDIT__,\n";
+		}
 		script += "  	}\n";
 		script += "  }\n";
 		script += "}";
@@ -1261,7 +1264,9 @@ public abstract class ControllerSupport<T extends IEntidade> {
 		script = script.replace("__LOCATOR__", locator);
 		script = script.replace("__LOCATOR_SLUG__", locatorSlug);
 		script = script.replace("__KIND__", kind);
-		script = script.replace("__CLASS__", myClass.getSimpleName());
+        script = script.replace("__CLASS__", myClass.getSimpleName());
+        script = script.replace("__SKIP_SHOW__", AnnotationViewBuilder.isSkipShow(myClass) ? "true" : "false");
+        script = script.replace("__SKIP_EDIT__", AnnotationViewBuilder.isSkipEdit(myClass) ? "true" : "false");
 
 		String vue = "<template>\n" + template + "\n</template>\n<script>\n" + script
 				+ "\n</script>\n<style scoped>\n</style>";

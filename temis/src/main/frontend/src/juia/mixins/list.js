@@ -20,7 +20,8 @@ export default {
             });
         },
         click: function (o) {
-            this.show(o);
+            if (this.skipShow) this.edit(o) 
+            else this.show(o);
         },
         edit: function (o) {
             this.$router.push({
