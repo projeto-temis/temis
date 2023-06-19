@@ -238,7 +238,7 @@ public class CaeAtividade extends Entidade {
 
 	@Override
 	public String getSelectFirstLine() {
-		return descricao;
+		return getTitle();
 	}
 
 	@Override

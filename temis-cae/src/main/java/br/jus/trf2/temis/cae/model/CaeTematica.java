@@ -50,6 +50,7 @@ public class CaeTematica extends Entidade {
 	@Edit(colM = 3)
 	LocalDate dataDeInicio;
 
+	@Search
 	@NotNull
 	@Edit(colM = 3)
 	LocalDate dataDeFim;
@@ -67,7 +68,7 @@ public class CaeTematica extends Entidade {
 
 	@Override
 	public String getSelectFirstLine() {
-		return nome;
+		return getTitle();
 	}
 
 	@Override
