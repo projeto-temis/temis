@@ -5,7 +5,9 @@ import java.lang.reflect.Field;
 import java.nio.charset.StandardCharsets;
 
 import com.crivano.juia.annotations.Global;
-import com.crivano.juia.annotations.Menu;
+import com.crivano.juia.annotations.MenuCreate;
+import com.crivano.juia.annotations.MenuList;
+import com.crivano.juia.annotations.MenuReport;
 import com.google.gson.JsonObject;
 
 import lombok.AllArgsConstructor;
@@ -102,12 +104,23 @@ public class TemisResource {
 			o.addProperty("gender", juiaGlobal.gender().name());
 			o.addProperty("locator", juiaGlobal.locator());
 		}
-		Menu juiaMenu = (Menu) cls.getAnnotation(Menu.class);
-		if (juiaMenu != null) {
-			o.addProperty("menuCaption", juiaMenu.caption());
-			o.addProperty("menuHint", juiaMenu.hint());
-			o.addProperty("menuCreate", juiaMenu.create());
-			o.addProperty("menuList", juiaMenu.list());
+		MenuList juiaMenuList = (MenuList) cls.getAnnotation(MenuList.class);
+		if (juiaMenuList != null) {
+			o.addProperty("menuList", true);
+			o.addProperty("menuListCaption", juiaMenuList.caption());
+			o.addProperty("menuListHint", juiaMenuList.hint());
+		}
+		MenuCreate juiaMenuCreate = (MenuCreate) cls.getAnnotation(MenuCreate.class);
+		if (juiaMenuCreate != null) {
+			o.addProperty("menuCreate", true);
+			o.addProperty("menuCreateCaption", juiaMenuCreate.caption());
+			o.addProperty("menuCreateHint", juiaMenuCreate.hint());
+		}
+		MenuReport juiaMenuReport = (MenuReport) cls.getAnnotation(MenuReport.class);
+		if (juiaMenuReport != null) {
+			o.addProperty("menuReport", true);
+			o.addProperty("menuReportCaption", juiaMenuReport.caption());
+			o.addProperty("menuReportHint", juiaMenuReport.hint());
 		}
 		return o.toString();
 	}

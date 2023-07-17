@@ -34,6 +34,7 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import com.crivano.jbiz.IActor;
 import com.crivano.jbiz.IEvent;
 import com.crivano.juia.annotations.Global;
 import com.crivano.juia.annotations.Global.Gender;
@@ -42,6 +43,7 @@ import com.crivano.juia.annotations.Search;
 import br.jus.trf2.temis.core.Etiqueta;
 import br.jus.trf2.temis.core.Evento;
 import br.jus.trf2.temis.core.IEntidade;
+import br.jus.trf2.temis.core.util.Utils;
 import lombok.Data;
 import lombok.experimental.FieldNameConstants;
 
@@ -52,7 +54,7 @@ import lombok.experimental.FieldNameConstants;
 @Global(singular = "Pessoa", plural = "Pessoas", gender = Gender.SHE, locator = "crp-pessoa", versionable = true)
 @Data
 @FieldNameConstants
-public class CrpPessoa implements IEntidade {
+public class CrpPessoa implements IEntidade, IActor, Comparable<CrpPessoa> {
 
 	@Id
 	@SequenceGenerator(name = "DP_PESSOA_SEQ", sequenceName = "CORPORATIVO.DP_PESSOA_SEQ")
@@ -293,6 +295,11 @@ public class CrpPessoa implements IEntidade {
 	@Override
 	public String getDescrCompleta() {
 		return sesb + matricula + " - " + nome;
+	}
+
+	@Override
+	public int compareTo(CrpPessoa o) {
+		return Utils.compare(this.getIdIni(), o.getIdIni());
 	}
 
 }

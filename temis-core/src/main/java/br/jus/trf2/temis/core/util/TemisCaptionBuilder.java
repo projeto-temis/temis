@@ -21,4 +21,8 @@ public class TemisCaptionBuilder implements CaptionBuilder {
 		s = Acentuacao.acentuarPalavra(s);
 		return s;
 	};
+	
+	public static String build(String name) {
+		return new TemisCaptionBuilder().buildCaptionFromName(name);
+	}
 }

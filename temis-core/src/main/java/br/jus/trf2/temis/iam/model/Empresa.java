@@ -57,13 +57,13 @@ public class Empresa extends Entidade implements Comparable<Empresa> {
 	@Edit(caption = "Descrição", colM = 12)
 	private String descricao;
 
-	@FieldSet(caption = "Usuários")
-	@Edit
-	List<XAgente> xAgente;
+//	@FieldSet(caption = "Usuários")
+//	@Edit
+//	List<XAgente> xAgente;
 
-	@FieldSet(caption = "Endereço Principal")
-	@Edit()
-	Endereco endereco;
+//	@FieldSet(caption = "Endereço Principal")
+//	@Edit()
+//	Endereco endereco;
 
 	@FieldSet(caption = "Comunicação")
 	@Edit(caption = "Email para Resposta", colM = 6)

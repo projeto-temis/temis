@@ -11,7 +11,7 @@ import com.crivano.jbiz.ITag;
 import com.crivano.juia.annotations.Edit;
 import com.crivano.juia.annotations.Global;
 import com.crivano.juia.annotations.Global.Gender;
-import com.crivano.juia.annotations.Menu;
+import com.crivano.juia.annotations.MenuList;
 import com.crivano.juia.annotations.Search;
 import com.crivano.juia.biz.IJuiaAction;
 
@@ -38,7 +38,7 @@ import lombok.experimental.FieldNameConstants;
 @NoArgsConstructor
 @EqualsAndHashCode
 @FieldNameConstants
-@Menu(list = true)
+@MenuList
 @Global(singular = "Instituição de Ensino", plural = "Instituições de Ensino", gender = Gender.SHE, locator = "cae-instituicao-de-ensino", codePrefix = "IE", deletable = true)
 public class CaeInstituicaoDeEnsino extends Entidade {
 	@Search

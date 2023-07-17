@@ -53,28 +53,30 @@ public class TemisEntityManagerFactory extends SigaEntityManagerFactoryImpl {
 
 	public void addClasses() {
 		super.addClasses();
-
-		addClass(Unidade.class);
-		addClass(Pessoa.class);
-		addClass(Endereco.class);
-
-		addClass(Arquivo.class);
-		addClass(ArquivoAssinaturaDigital.class);
-		addClass(ArquivoHtml.class);
-		addClass(ArquivoImagem.class);
-		addClass(ArquivoJpeg.class);
-		addClass(ArquivoJson.class);
-		addClass(ArquivoPdf.class);
-		addClass(ArquivoPng.class);
-		addClass(Evento.class);
-		addClass(Agente.class);
-
-		addClass(Entidade.class);
-		addClass(Etiqueta.class);
-		addClass(ProximoCodigo.class);
-
-		addClass(CrpPessoa.class);
-		addClass(CrpLotacao.class);
+		
+//		
+//
+//		addClass(Unidade.class);
+//		addClass(Pessoa.class);
+//		addClass(Endereco.class);
+//
+//		addClass(Arquivo.class);
+//		addClass(ArquivoAssinaturaDigital.class);
+//		addClass(ArquivoHtml.class);
+//		addClass(ArquivoImagem.class);
+//		addClass(ArquivoJpeg.class);
+//		addClass(ArquivoJson.class);
+//		addClass(ArquivoPdf.class);
+//		addClass(ArquivoPng.class);
+//		addClass(Evento.class);
+//		addClass(Agente.class);
+//
+//		addClass(Entidade.class);
+//		addClass(Etiqueta.class);
+//		addClass(ProximoCodigo.class);
+//
+//		addClass(CrpPessoa.class);
+//		addClass(CrpLotacao.class);
 		System.out.println("*** CRP_PESSOA ADDED");
 
 	}

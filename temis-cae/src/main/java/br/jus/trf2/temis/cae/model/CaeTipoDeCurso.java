@@ -3,7 +3,9 @@ package br.jus.trf2.temis.cae.model;
 import javax.persistence.Entity;
 import javax.validation.constraints.NotNull;
 
+import com.crivano.juia.annotations.Detail;
 import com.crivano.juia.annotations.Edit;
+import com.crivano.juia.annotations.EditKindEnum;
 import com.crivano.juia.annotations.Global;
 import com.crivano.juia.annotations.Global.Gender;
 import com.crivano.juia.annotations.MenuList;
@@ -19,12 +21,25 @@ import lombok.experimental.FieldNameConstants;
 @Setter
 @FieldNameConstants
 @MenuList
-@Global(singular = "Tipo de Atividade", plural = "Tipos de Atividades", gender = Gender.HE, locator = "cae-tipo-de-atividade", codePrefix = "TA", deletable = true)
-public class CaeTipoDeAtividade extends Entidade {
+@Global(singular = "Tipo de Curso", plural = "Tipos de Curso", gender = Gender.HE, locator = "cae-tipo-de-curso", codePrefix = "TC", deletable = true)
+public class CaeTipoDeCurso extends Entidade {
 	@Search
 	@NotNull
-	@Edit(caption = "Descrição", colM = 3)
+	@Edit(colM = 3)
+	String nome;
+	
+	@Search
+	@NotNull
+	@Edit(caption = "Descrição", colM = 9)
 	String descricao;
+	
+	@NotNull
+	@Edit(caption = "Observações", kind = EditKindEnum.TEXTAREA, colM = 12)
+	String obs;
+
+	@NotNull
+	@Edit(kind = EditKindEnum.TEXTAREA, colM = 12)
+	String pedido;
 
 	@Override
 	public String getDescr() {

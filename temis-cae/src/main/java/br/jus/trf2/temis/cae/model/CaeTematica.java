@@ -11,7 +11,7 @@ import com.crivano.juia.annotations.Edit;
 import com.crivano.juia.annotations.FieldSet;
 import com.crivano.juia.annotations.Global;
 import com.crivano.juia.annotations.Global.Gender;
-import com.crivano.juia.annotations.Menu;
+import com.crivano.juia.annotations.MenuList;
 import com.crivano.juia.annotations.Search;
 import com.crivano.juia.biz.IJuiaAction;
 
@@ -36,7 +36,7 @@ import lombok.experimental.FieldNameConstants;
 @Getter
 @Setter
 @FieldNameConstants
-@Menu(list = true)
+@MenuList
 @Global(singular = "Comissão Temática", plural = "Comissões Temáticas", gender = Gender.SHE, locator = "cae-tematica", codePrefix = "TM", deletable = true, inactivable = true)
 public class CaeTematica extends Entidade {
 

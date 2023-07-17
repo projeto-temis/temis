@@ -1,11 +1,8 @@
 package br.jus.trf2.temis.core;
 
 import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
 import java.util.Collection;
 import java.util.Date;
-import java.util.IdentityHashMap;
-import java.util.Map;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
@@ -36,8 +33,8 @@ import com.crivano.juia.util.JuiaUtils;
 import br.jus.trf2.temis.core.util.ContextInterceptor;
 import br.jus.trf2.temis.core.util.ModeloUtils;
 import br.jus.trf2.temis.core.util.NoSerialization;
-import br.jus.trf2.temis.iam.model.Pessoa;
-import br.jus.trf2.temis.iam.model.Unidade;
+import br.jus.trf2.temis.crp.model.CrpLotacao;
+import br.jus.trf2.temis.crp.model.CrpPessoa;
 import lombok.Data;
 import lombok.experimental.FieldNameConstants;
 
@@ -69,9 +66,9 @@ public abstract class Entidade extends Objeto implements IEntidade {
 	private String codigo;
 
 	@ManyToOne
-	private Pessoa pessoaCadastrante;
+	private CrpPessoa pessoaCadastrante;
 	@ManyToOne
-	private Unidade unidadeCadastrante;
+	private CrpLotacao unidadeCadastrante;
 
 	@NoSerialization
 	@OneToMany(mappedBy = Etiqueta.Fields.entidade, cascade = CascadeType.ALL)

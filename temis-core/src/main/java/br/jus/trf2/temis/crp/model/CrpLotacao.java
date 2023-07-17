@@ -42,6 +42,7 @@ import com.crivano.juia.annotations.Search;
 import br.jus.trf2.temis.core.Etiqueta;
 import br.jus.trf2.temis.core.Evento;
 import br.jus.trf2.temis.core.IEntidade;
+import br.jus.trf2.temis.core.util.Utils;
 import lombok.Data;
 import lombok.experimental.FieldNameConstants;
 
@@ -52,7 +53,7 @@ import lombok.experimental.FieldNameConstants;
 @Global(singular = "Lotação", plural = "Lotações", gender = Gender.SHE, locator = "crp-lotacao", versionable = true)
 @Data
 @FieldNameConstants
-public class CrpLotacao implements IEntidade {
+public class CrpLotacao implements IEntidade, Comparable<CrpLotacao> {
 
 	@Id
 	@SequenceGenerator(name = "DP_LOTACAO_SEQ", sequenceName = "CORPORATIVO.DP_LOTACAO_SEQ")
@@ -194,5 +195,10 @@ public class CrpLotacao implements IEntidade {
 	@Override
 	public String getDescrCompleta() {
 		return sigla + " - " + nome;
+	}
+
+	@Override
+	public int compareTo(CrpLotacao o) {
+		return Utils.compare(this.getIdIni(), o.getIdIni());
 	}
 }

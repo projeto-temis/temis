@@ -15,12 +15,10 @@ import javax.persistence.OneToMany;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 
-import com.auth0.jwt.internal.org.apache.commons.lang3.ObjectUtils;
 import com.crivano.jbiz.IActor;
 import com.crivano.jbiz.IEvent;
 import com.crivano.jlogic.Expression;
 import com.crivano.jsync.IgnoreForSimilarity;
-import com.crivano.juia.annotations.Edit;
 import com.crivano.juia.annotations.Global;
 import com.crivano.juia.biz.IJuiaEvent;
 
@@ -28,6 +26,8 @@ import br.jus.trf2.temis.core.logic.PodeSim;
 import br.jus.trf2.temis.core.util.ContextInterceptor;
 import br.jus.trf2.temis.core.util.Dao;
 import br.jus.trf2.temis.core.util.ModeloUtils;
+import br.jus.trf2.temis.core.util.Utils;
+import br.jus.trf2.temis.crp.model.CrpPessoa;
 import br.jus.trf2.temis.iam.model.Agente;
 import lombok.Data;
 import lombok.experimental.FieldNameConstants;
@@ -44,7 +44,7 @@ public abstract class Evento<E extends IEntidade, V extends Evento<E, V>> extend
 	private Long id;
 
 	@ManyToOne
-	private Agente agente;
+	private CrpPessoa agente;
 
 	private Date dtIni;
 	private Date dtFim;
@@ -140,10 +140,10 @@ public abstract class Evento<E extends IEntidade, V extends Evento<E, V>> extend
 
 	@Override
 	public int compareTo(Evento<E, ?> that) {
-		int i = ObjectUtils.compare(getBegin(), that.getBegin());
+		int i = Utils.compare(getBegin(), that.getBegin());
 		if (i != 0)
 			return i;
-		i = ObjectUtils.compare(getId(), that.getId());
+		i = Utils.compare(getId(), that.getId());
 		if (i != 0)
 			return i;
 		return 0;

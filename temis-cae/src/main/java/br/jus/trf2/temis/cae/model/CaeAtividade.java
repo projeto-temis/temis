@@ -25,9 +25,9 @@ import com.crivano.juia.annotations.EditKindEnum;
 import com.crivano.juia.annotations.FieldSet;
 import com.crivano.juia.annotations.Global;
 import com.crivano.juia.annotations.Global.Gender;
-import com.crivano.juia.annotations.Menu;
+import com.crivano.juia.annotations.MenuCreate;
+import com.crivano.juia.annotations.MenuList;
 import com.crivano.juia.annotations.Search;
-import com.crivano.juia.annotations.Show;
 import com.crivano.juia.annotations.ShowGroup;
 import com.crivano.juia.biz.IJuiaAction;
 
@@ -47,7 +47,6 @@ import br.jus.trf2.temis.core.Evento;
 import br.jus.trf2.temis.core.action.Auditar;
 import br.jus.trf2.temis.core.action.Editar;
 import br.jus.trf2.temis.core.util.NoSerialization;
-import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -60,7 +59,8 @@ import lombok.experimental.FieldNameConstants;
 @NoArgsConstructor
 @EqualsAndHashCode
 @FieldNameConstants
-@Menu(list = true)
+@MenuList
+@MenuCreate
 @Global(singular = "Atividade", plural = "Atividades", gender = Gender.SHE, locator = "cae-atividade", codePrefix = "AT", deletable = true)
 public class CaeAtividade extends Entidade {
 

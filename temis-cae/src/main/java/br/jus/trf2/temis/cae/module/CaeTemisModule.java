@@ -29,22 +29,22 @@ public class CaeTemisModule extends TemisModuleSupport {
 
 	@PostConstruct
 	public void onPostConstruct() {
-		app.register(CaeInstituicaoDeEnsino.class);
-		app.register(CaeTipoDeAtividade.class);
-		app.register(CaeAtividade.class);
-		app.register(CaeTematica.class);
-		app.register(CaeCurso.class);
-		app.register(CaeCurso.XTematica.class);
-		app.register(CaeCurso.XAtividade.class);
-		app.register(CaeConvolacao.class);
-		app.register(CaeConvolacao.XTipoDeAtividade.class);
-
-		app.register(CaeEventoDeAtividade.class);
-		app.register(CaeEventoDeAtividadeInscricao.class);
-		app.register(CaeEventoDeAtividadeDeferimento.class);
-		app.register(CaeEventoDeAtividadeIndeferimento.class);
-		app.register(CaeEventoDeAtividadeAprovacao.class);
-		app.register(CaeEventoDeAtividadeReprovacao.class);
+//		app.register(CaeInstituicaoDeEnsino.class);
+//		app.register(CaeTipoDeAtividade.class);
+//		app.register(CaeAtividade.class);
+//		app.register(CaeTematica.class);
+//		app.register(CaeCurso.class);
+//		app.register(CaeCurso.XTematica.class);
+//		app.register(CaeCurso.XAtividade.class);
+//		app.register(CaeConvolacao.class);
+//		app.register(CaeConvolacao.XTipoDeAtividade.class);
+//
+//		app.register(CaeEventoDeAtividade.class);
+//		app.register(CaeEventoDeAtividadeInscricao.class);
+//		app.register(CaeEventoDeAtividadeDeferimento.class);
+//		app.register(CaeEventoDeAtividadeIndeferimento.class);
+//		app.register(CaeEventoDeAtividadeAprovacao.class);
+//		app.register(CaeEventoDeAtividadeReprovacao.class);
 
 		app.addModule("cae", this);
 		System.out.println("*** CAE INIT");

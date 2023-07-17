@@ -21,7 +21,7 @@ import com.crivano.juia.annotations.Detail;
 import com.crivano.juia.annotations.DetailGroup;
 import com.crivano.juia.annotations.Global;
 import com.crivano.juia.annotations.Global.Gender;
-import com.crivano.juia.annotations.Menu;
+import com.crivano.juia.annotations.MenuList;
 import com.crivano.juia.annotations.Search;
 import com.crivano.juia.biz.IJuiaAction;
 

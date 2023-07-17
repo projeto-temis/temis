@@ -21,7 +21,7 @@ import com.crivano.juia.annotations.EditKindEnum;
 import com.crivano.juia.annotations.FieldSet;
 import com.crivano.juia.annotations.Global;
 import com.crivano.juia.annotations.Global.Gender;
-import com.crivano.juia.annotations.Menu;
+import com.crivano.juia.annotations.MenuList;
 import com.crivano.juia.annotations.Search;
 import com.crivano.juia.biz.IJuiaAction;
 
@@ -42,7 +42,7 @@ import lombok.experimental.FieldNameConstants;
 @NoArgsConstructor
 @EqualsAndHashCode
 @FieldNameConstants
-@Menu(list = true)
+@MenuList
 @Global(singular = "Curso", plural = "Cursos", gender = Gender.HE, locator = "cae-curso", codePrefix = "CS", deletable = false)
 public class CaeCurso extends Entidade {
 

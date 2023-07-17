@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
+import Report from '../views/Report.vue'
 import Painel from '../views/Painel.vue'
 import Login from '../views/Login.vue'
 import httpVueLoader from 'http-vue-loader';
@@ -35,6 +36,10 @@ const routes = [{
     component: Home
 },
 {
+    path: "/:locator/report",
+    name: "Report",
+    component: Report
+}, {
     path: '/about',
     name: 'About',
     // route level code-splitting

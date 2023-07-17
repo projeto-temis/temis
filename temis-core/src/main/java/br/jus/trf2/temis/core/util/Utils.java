@@ -25,6 +25,15 @@ import br.jus.trf2.temis.core.Entidade;
 import br.jus.trf2.temis.core.enm.AmbienteEnum;
 
 public class Utils {
+	public static String localizadorDaClasse(Class clazz) {
+		String locator = null;
+		Global global = (Global) clazz.getAnnotation(Global.class);
+		if (global != null)
+			locator = global.locator();
+
+		return locator;
+	}
+
 	public static String removeAcento(String acentuado) {
 		if (acentuado == null)
 			return null;

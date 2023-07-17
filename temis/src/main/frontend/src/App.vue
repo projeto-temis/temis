@@ -1,8 +1,7 @@
 <template>
   <div id="app">
     <b-navbar type="dark" variant="dark">
-      <b-navbar-brand href="#/"
-        ><img class="brand" src="./assets/logo.png" />
+      <b-navbar-brand href="#/"><img class="brand" src="./assets/logo.png" />
       </b-navbar-brand>
 
       <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
@@ -11,10 +10,16 @@
         <b-navbar-nav>
           <b-nav-item text="Painel" href="#/">Painel</b-nav-item>
           <b-nav-item-dropdown text="Criar">
-            <b-dropdown-item v-for="m in $store.state.model.filter(a => a.menuCreate)" :key="m.className" :href="'#/' + m.locator + '/new'">{{ m.singular }}</b-dropdown-item>
+            <b-dropdown-item v-for="m in $store.state.model.filter(a => a.menuCreate)" :key="m.className"
+              :href="'#/' + m.locator + '/new'">{{ m.singular }}</b-dropdown-item>
           </b-nav-item-dropdown>
           <b-nav-item-dropdown text="Cadastros">
-            <b-dropdown-item v-for="m in $store.state.model.filter(a => a.menuList)" :key="m.className" :href="'#/' + m.locator + '/list'">{{ m.singular }}</b-dropdown-item>
+            <b-dropdown-item v-for="m in $store.state.model.filter(a => a.menuList)" :key="m.className"
+              :href="'#/' + m.locator + '/list'">{{ m.singular }}</b-dropdown-item>
+          </b-nav-item-dropdown>
+          <b-nav-item-dropdown text="Relatórios">
+            <b-dropdown-item v-for="m in $store.state.model.filter(a => a.menuReport)" :key="m.className"
+              :href="'#/' + m.locator + '/report'">{{ m.singular }}</b-dropdown-item>
           </b-nav-item-dropdown>
         </b-navbar-nav>
       </b-collapse>
@@ -27,7 +32,7 @@
 
 <script>
 import AuthBL from "./utils/auth.js";
-import {buildRoutes} from "./router"
+import { buildRoutes } from "./router"
 
 export default {
   name: "App",
@@ -58,6 +63,7 @@ export default {
   width: 2em !important;
   height: 2em;
 }
+
 .carrinho-badge {
   margin-left: 0.5em;
 }
@@ -223,11 +229,12 @@ ul.blog-tags l1:hover i {
 div#sidebar p {
   margin: 0;
 }
+
 div#sidebar p span.topic-caption {
   font-weight: bold;
   color: #bbb;
 }
+
 div#sidebar p span.topic-separator {
   color: #bbb;
-}
-</style>
+}</style>

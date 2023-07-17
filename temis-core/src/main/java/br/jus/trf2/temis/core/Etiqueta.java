@@ -15,8 +15,8 @@ import com.crivano.juia.annotations.Global.Gender;
 
 import br.jus.trf2.temis.core.enm.MarcadorEnum;
 import br.jus.trf2.temis.core.util.ModeloUtils.Desconsiderar;
-import br.jus.trf2.temis.iam.model.Pessoa;
-import br.jus.trf2.temis.iam.model.Unidade;
+import br.jus.trf2.temis.crp.model.CrpLotacao;
+import br.jus.trf2.temis.crp.model.CrpPessoa;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -45,10 +45,10 @@ public class Etiqueta implements ITag, Comparable<Etiqueta> {
 	private Long idEvento;
 
 	@ManyToOne
-	private Pessoa pessoa;
+	private CrpPessoa pessoa;
 
 	@ManyToOne
-	private Unidade unidade;
+	private CrpLotacao unidade;
 
 	@NotNull
 	@NonNull

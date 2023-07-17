@@ -33,37 +33,37 @@ public class PjdTemisModule extends TemisModuleSupport {
 
 	@PostConstruct
 	public void onPostConstruct() {
-		app.register(PeticaoInicial.class);
-		app.register(PeticaoInicial.XPessoa.class);
-		app.register(PeticaoInicial.XFato.class);
-		app.register(PeticaoInicial.XDano.class);
-		app.register(PeticaoInicial.XDireito.class);
-		app.register(PeticaoInicial.XJurisprudencia.class);
-		app.register(PeticaoInicial.XPedido.class);
-		app.register(PeticaoInicial.XProva.class);
-		app.register(PeticaoInicial.XEvento.class);
-		app.register(PeticaoInicialEventoAnotacao.class);
-
-		app.register(Processo.class);
-		app.register(Processo.EventoProcessual.class);
-		app.register(EventoProcessualAnotacao.class);
-		app.register(EventoProcessualInclusaoDeParte.class);
-		app.register(EventoProcessualInclusaoDeFato.class);
-		app.register(EventoProcessualInclusaoDeNorma.class);
-		app.register(EventoProcessualInclusaoDeDocumento.class);
-		app.register(EventoProcessualInclusaoDeDocumentoGenerico.class);
-		app.register(EventoProcessualInclusaoDeDocumentoComprobatorioDeEpp.class);
-		app.register(EventoProcessualInclusaoDeFontePagadora.class);
-		app.register(EventoProcessualInclusaoDeJurisprudencia.class);
-		app.register(EventoProcessualInclusaoDePedido.class);
-		app.register(EventoProcessualDefinicaoDeValorDaCausa.class);
-		app.register(EventoProcessualAutuacao.class);
-
-		app.register(Norma.class);
-		app.register(Norma.EventoNorma.class);
-
-		app.register(Jurisprudencia.class);
-		app.register(Jurisprudencia.EventoJurisprudencia.class);
+//		app.register(PeticaoInicial.class);
+//		app.register(PeticaoInicial.XPessoa.class);
+//		app.register(PeticaoInicial.XFato.class);
+//		app.register(PeticaoInicial.XDano.class);
+//		app.register(PeticaoInicial.XDireito.class);
+//		app.register(PeticaoInicial.XJurisprudencia.class);
+//		app.register(PeticaoInicial.XPedido.class);
+//		app.register(PeticaoInicial.XProva.class);
+//		app.register(PeticaoInicial.XEvento.class);
+//		app.register(PeticaoInicialEventoAnotacao.class);
+//
+//		app.register(Processo.class);
+//		app.register(Processo.EventoProcessual.class);
+//		app.register(EventoProcessualAnotacao.class);
+//		app.register(EventoProcessualInclusaoDeParte.class);
+//		app.register(EventoProcessualInclusaoDeFato.class);
+//		app.register(EventoProcessualInclusaoDeNorma.class);
+//		app.register(EventoProcessualInclusaoDeDocumento.class);
+//		app.register(EventoProcessualInclusaoDeDocumentoGenerico.class);
+//		app.register(EventoProcessualInclusaoDeDocumentoComprobatorioDeEpp.class);
+//		app.register(EventoProcessualInclusaoDeFontePagadora.class);
+//		app.register(EventoProcessualInclusaoDeJurisprudencia.class);
+//		app.register(EventoProcessualInclusaoDePedido.class);
+//		app.register(EventoProcessualDefinicaoDeValorDaCausa.class);
+//		app.register(EventoProcessualAutuacao.class);
+//
+//		app.register(Norma.class);
+//		app.register(Norma.EventoNorma.class);
+//
+//		app.register(Jurisprudencia.class);
+//		app.register(Jurisprudencia.EventoJurisprudencia.class);
 
 		app.addModule("pjd", this);
 		System.out.println("*** PJD INIT");
