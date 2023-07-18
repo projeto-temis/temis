@@ -39,7 +39,7 @@ import lombok.experimental.FieldNameConstants;
 @EqualsAndHashCode
 @FieldNameConstants
 @MenuList
-@Global(singular = "Instituição de Ensino", plural = "Instituições de Ensino", gender = Gender.SHE, locator = "cae-instituicao-de-ensino", codePrefix = "IE", deletable = true)
+@Global(singular = "Instituição de Ensino", plural = "Instituições de Ensino", gender = Gender.SHE, codePrefix = "IE", deletable = true)
 public class CaeInstituicaoDeEnsino extends Entidade {
 	@Search
 	@NotNull
@@ -75,7 +75,7 @@ public class CaeInstituicaoDeEnsino extends Entidade {
 //			set.add(Etiqueta.of(null, this, null, getPessoaCadastrante(), getUnidadeCadastrante(),
 //					MarcadorEnum.AGUARDANDO_DECISAO, this.getBegin(), null));
 	}
-	
+
 	@Override
 	public String getTitle() {
 		return getCodigo() + " - " + nome;

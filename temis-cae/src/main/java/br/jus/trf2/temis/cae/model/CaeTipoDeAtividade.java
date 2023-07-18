@@ -19,7 +19,7 @@ import lombok.experimental.FieldNameConstants;
 @Setter
 @FieldNameConstants
 @MenuList
-@Global(singular = "Tipo de Atividade", plural = "Tipos de Atividades", gender = Gender.HE, locator = "cae-tipo-de-atividade", codePrefix = "TA", deletable = true)
+@Global(singular = "Tipo de Atividade", plural = "Tipos de Atividades", gender = Gender.HE, codePrefix = "TA", deletable = true)
 public class CaeTipoDeAtividade extends Entidade {
 	@Search
 	@NotNull

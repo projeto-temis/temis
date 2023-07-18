@@ -3,9 +3,9 @@ package br.jus.trf2.temis.core;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.Date;
-import java.util.IdentityHashMap;
 import java.util.Map;
 import java.util.SortedSet;
+import java.util.TreeSet;
 
 import com.crivano.jbiz.IEvent;
 import com.crivano.jsync.Synchronizable;
@@ -34,7 +34,6 @@ public interface IEntidade extends IJuiaEntity, Synchronizable {
 	Date getTermino();
 
 	String getDescrCompleta();
-	
 
 	default String toString(Object object, Map<Object, Boolean> visitedObjects) {
 		if (object == null) {
@@ -70,4 +69,14 @@ public interface IEntidade extends IJuiaEntity, Synchronizable {
 		sb.append("]");
 		return sb.toString();
 	}
+
+	default <T extends Evento<?, ?>> SortedSet<T> getEventosAtivos(Class<T> clazz) {
+		SortedSet<T> set = new TreeSet<>();
+		for (Evento<?, ?> e : getEvento()) {
+			if (e.isAtiva() && e.getClass().isAssignableFrom(clazz))
+				set.add((T) e);
+		}
+		return set;
+	};
+
 }

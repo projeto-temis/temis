@@ -43,7 +43,7 @@ import lombok.experimental.FieldNameConstants;
 @EqualsAndHashCode
 @FieldNameConstants
 @MenuList
-@Global(singular = "Curso", plural = "Cursos", gender = Gender.HE, locator = "cae-curso", codePrefix = "CS", deletable = false)
+@Global(singular = "Curso", plural = "Cursos", gender = Gender.HE, codePrefix = "CS", deletable = false)
 public class CaeCurso extends Entidade {
 
 	@Search
@@ -79,7 +79,7 @@ public class CaeCurso extends Entidade {
 	@NoArgsConstructor
 	@EqualsAndHashCode
 	@FieldNameConstants
-	@Global(singular = "Atividade", plural = "Atividades", gender = Gender.SHE, locator = "pro-curso-x-atividade", codePrefix = "CA", deletable = true)
+	@Global(singular = "Atividade", plural = "Atividades", gender = Gender.SHE, codePrefix = "CA", deletable = true)
 	public static class XAtividade extends Entidade {
 		@NoSerialization
 		@IgnoreForSimilarityIfDependent

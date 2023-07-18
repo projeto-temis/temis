@@ -28,9 +28,12 @@ public class Utils {
 	public static String localizadorDaClasse(Class clazz) {
 		String locator = null;
 		Global global = (Global) clazz.getAnnotation(Global.class);
-		if (global != null)
+		if (global != null && global.locator() != null && !global.locator().isEmpty())
 			locator = global.locator();
-
+		else {
+			locator = Texto.quebrarCamelCase(clazz.getSimpleName());
+			locator = Texto.slugify(locator, true, false);
+		}
 		return locator;
 	}
 
@@ -304,8 +307,9 @@ public class Utils {
 	}
 
 	public static String buildLink(Entidade entidade, String link) {
-		return "<a href=\"#/" + entidade.getClass().getAnnotation(Global.class).locator() + "/show/" + entidade.getId()
-				+ "\">" + (link == null ? entidade.getCode() : link) + "</a>";
+		String locator = Utils.localizadorDaClasse(entidade.getClass());
+		return "<a href=\"#/" + locator + "/show/" + entidade.getId() + "\">"
+				+ (link == null ? entidade.getCode() : link) + "</a>";
 	}
 
 }

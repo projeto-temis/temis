@@ -10,8 +10,12 @@ public class Acentuacao {
 
 	public enum Palavra {
 		CODIGO("código"),
+		HORARIO("horário"),
+		HORARIA("horária"),
+		MES("mês"),
 		NUMERO("número"),
 		INICIO("início"),
+		TEMATICA("temática"),
 		TERMINO("término"),
 		ESPECIE("espécie"),
 		ORGAO("órgão");
@@ -37,7 +41,7 @@ public class Acentuacao {
 	}
 
 	public enum Terminacao {
-		CAO("ção"), COES("ções");
+		CAO("ção"), COES("ções"), SSAO("ssão"), SSOES("ssões");
 
 		private final String substituicao;
 

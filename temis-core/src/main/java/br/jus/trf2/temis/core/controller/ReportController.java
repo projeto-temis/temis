@@ -9,7 +9,7 @@ import java.util.logging.Logger;
 
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
-import javax.persistence.OneToMany;
+import javax.persistence.ManyToOne;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -118,7 +118,11 @@ public class ReportController {
 		Relatorio acao = (Relatorio) instantiator.instantiate(target, parameters, errors);
 
 		for (Field fld : ModeloUtils.getFieldList(acao.getClass())) {
-			if (fld.getAnnotation(OneToMany.class) != null) {
+			if (fld.getAnnotation(Inject.class) != null && fld.getType().isAssignableFrom(EntityManager.class)) {
+				fld.set(acao, em);
+			}
+			
+			if (fld.getAnnotation(ManyToOne.class) != null) {
 				Object o = fld.get(acao);
 				Object odb = em.find(o.getClass(), dao.getIdentifier(o));
 				fld.set(acao, odb);
@@ -146,6 +150,8 @@ public class ReportController {
 
 		try {
 			acao.gerar();
+			if (acao.getLinhas().size() == 0)
+				throw new RuntimeException("Nenhum dado retornado pela consulta.");
 			switch (formato) {
 			case CSV:
 				String csv = acao.gerarCsv();

@@ -1,5 +1,7 @@
 package br.jus.trf2.temis.cae.report;
 
+import java.util.Date;
+
 import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotNull;
 
@@ -11,6 +13,7 @@ import com.crivano.juia.annotations.Global.Gender;
 import com.crivano.juia.annotations.MenuReport;
 import com.crivano.juia.annotations.Search;
 
+import br.jus.trf2.temis.cae.model.enm.CaeTipoDeAtividadeEnum;
 import br.jus.trf2.temis.core.Relatorio;
 import br.jus.trf2.temis.crp.model.CrpPessoa;
 import lombok.AllArgsConstructor;
@@ -22,8 +25,8 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @MenuReport
-@Global(singular = "Relatório de Convolação", plural = "Relatórios de Convolações", gender = Gender.HE)
-public class CaeRelatorioDeConvolacao extends Relatorio {
+@Global(singular = "Relatório de Histórico de Participação", plural = "Relatórios de Histórico de Participação", gender = Gender.HE)
+public class CaeRelatorioDeHistoricoDeParticipacao extends Relatorio {
 
 	@Edit(caption = "Magistrado", colM = 9)
 	@NotNull
@@ -37,18 +40,28 @@ public class CaeRelatorioDeConvolacao extends Relatorio {
 
 	@AllArgsConstructor(staticName = "of")
 	public static class Linha extends LinhaDeRelatorio {
-		@FieldProps(name = "Magistrado")
-		String magistrado;
+		@FieldProps(align = Align.CENTER)
+		Date data;
 
-		@FieldProps(align = Align.RIGHT)
-		Integer ano;
-		String atividade;
+		@FieldProps(align = Align.CENTER)
+		CaeTipoDeAtividadeEnum tipoDeAtividade;
+
+		@FieldProps(align = Align.CENTER)
+		String tema;
+
+		@FieldProps(align = Align.CENTER)
+		String comissaoTematica;
+
+		@FieldProps(align = Align.CENTER)
+		String tipoDeParticipacao;
+
+		@FieldProps(align = Align.CENTER)
+		String aproveitamentoDeParticipacao;
 	}
 
 	@Override
 	public void gerar() {
-		linha(Linha.of("Renato", 2023, "Curso 1"));
-		linha(Linha.of("Mônica", 2023, "Curso 2"));
-		linha(Linha.of("Total", null, "2").total());
+		linha(Linha.of(new Date(), CaeTipoDeAtividadeEnum.CIVIL_CURSO_DE_AMBIENTACAO, "Tema do Curso",
+				"Commisão temática", "Inscrito/Coordenador", "Sim"));
 	}
 }

@@ -10,6 +10,7 @@ import com.crivano.juia.annotations.MenuList;
 import com.crivano.juia.annotations.MenuReport;
 import com.google.gson.JsonObject;
 
+import br.jus.trf2.temis.core.util.Utils;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
@@ -102,7 +103,8 @@ public class TemisResource {
 			o.addProperty("singular", juiaGlobal.singular());
 			o.addProperty("plural", juiaGlobal.singular());
 			o.addProperty("gender", juiaGlobal.gender().name());
-			o.addProperty("locator", juiaGlobal.locator());
+			String locator = Utils.localizadorDaClasse(cls);
+			o.addProperty("locator", locator);
 		}
 		MenuList juiaMenuList = (MenuList) cls.getAnnotation(MenuList.class);
 		if (juiaMenuList != null) {

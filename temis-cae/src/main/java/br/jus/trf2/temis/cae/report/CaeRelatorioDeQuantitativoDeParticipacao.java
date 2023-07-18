@@ -22,8 +22,8 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @MenuReport
-@Global(singular = "Relatório de Convolação", plural = "Relatórios de Convolações", gender = Gender.HE)
-public class CaeRelatorioDeConvolacao extends Relatorio {
+@Global(singular = "Relatório de Quantitativo de Participação", plural = "Relatórios de Quantitativo de Participação", gender = Gender.HE)
+public class CaeRelatorioDeQuantitativoDeParticipacao extends Relatorio {
 
 	@Edit(caption = "Magistrado", colM = 9)
 	@NotNull

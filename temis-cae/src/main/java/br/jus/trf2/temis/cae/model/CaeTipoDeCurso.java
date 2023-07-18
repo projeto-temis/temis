@@ -21,18 +21,18 @@ import lombok.experimental.FieldNameConstants;
 @Setter
 @FieldNameConstants
 @MenuList
-@Global(singular = "Tipo de Curso", plural = "Tipos de Curso", gender = Gender.HE, locator = "cae-tipo-de-curso", codePrefix = "TC", deletable = true)
+@Global(singular = "Tipo de Curso", plural = "Tipos de Curso", gender = Gender.HE, codePrefix = "TC", deletable = true)
 public class CaeTipoDeCurso extends Entidade {
 	@Search
 	@NotNull
 	@Edit(colM = 3)
 	String nome;
-	
+
 	@Search
 	@NotNull
 	@Edit(caption = "Descrição", colM = 9)
 	String descricao;
-	
+
 	@NotNull
 	@Edit(caption = "Observações", kind = EditKindEnum.TEXTAREA, colM = 12)
 	String obs;

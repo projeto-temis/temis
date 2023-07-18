@@ -17,6 +17,7 @@ import br.com.caelum.vraptor.Controller;
 import br.com.caelum.vraptor.Path;
 import br.jus.trf2.temis.core.Objeto;
 import br.jus.trf2.temis.core.controller.ControllerSupport;
+import br.jus.trf2.temis.core.util.Utils;
 import lombok.NoArgsConstructor;
 import net.bytebuddy.ByteBuddy;
 import net.bytebuddy.description.annotation.AnnotationDescription;
@@ -55,10 +56,8 @@ public class TemisAutoController implements Extension {
 
 	public Class generateControllerNew(Class<?> clazz) {
 		String classname = clazz.getName().replace(".model.", ".controller.") + "Controller";
-		Global global = clazz.getAnnotation(Global.class);
-		if (global == null)
-			return null;
-		String[] path = new String[] { "app/" + global.locator() };
+		String locator = Utils.localizadorDaClasse(clazz);
+		String[] path = new String[] { "app/" + locator };
 		try {
 			Class<?> controller = new ByteBuddy()
 					.subclass(TypeDescription.Generic.Builder.parameterizedType(ControllerSupport.class, clazz).build())
@@ -78,10 +77,8 @@ public class TemisAutoController implements Extension {
 			this.getClass().getClassLoader().loadClass(classname);
 			return null;
 		} catch (ClassNotFoundException e) {
-			Global global = clazz.getAnnotation(Global.class);
-			if (global == null)
-				return null;
-			String[] path = new String[] { "app/" + global.locator() };
+			String locator = Utils.localizadorDaClasse(clazz);
+			String[] path = new String[] { "app/" + locator };
 			Class<?> controller = new ByteBuddy()
 					.subclass(TypeDescription.Generic.Builder.parameterizedType(ControllerSupport.class, clazz).build())
 					.name(classname).annotateType(AnnotationDescription.Builder.ofType(RequestScoped.class).build())

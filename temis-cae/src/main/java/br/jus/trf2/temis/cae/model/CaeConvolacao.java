@@ -40,7 +40,7 @@ import lombok.experimental.FieldNameConstants;
 @NoArgsConstructor
 @FieldNameConstants
 @MenuList
-@Global(singular = "Convolação", plural = "Convolações", gender = Gender.SHE, locator = "cae-convolacao", codePrefix = "CN", deletable = true)
+@Global(singular = "Convolação", plural = "Convolações", gender = Gender.SHE, codePrefix = "CN", deletable = true)
 public class CaeConvolacao extends Entidade {
 
 	@Entity
@@ -48,7 +48,7 @@ public class CaeConvolacao extends Entidade {
 	@Setter
 	@NoArgsConstructor
 	@FieldNameConstants
-	@Global(singular = "Atividade", plural = "Atividades", gender = Gender.SHE, locator = "pro-convolacao-x-atividade", deletable = true)
+	@Global(singular = "Atividade", plural = "Atividades", gender = Gender.SHE, deletable = true)
 	public static class XTipoDeAtividade extends Entidade {
 		@ManyToOne(fetch = FetchType.LAZY)
 		@NoSerialization

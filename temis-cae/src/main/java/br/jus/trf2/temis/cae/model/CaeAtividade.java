@@ -35,6 +35,7 @@ import br.jus.trf2.temis.cae.model.enm.CaeEspecieDeAtividadeEnum;
 import br.jus.trf2.temis.cae.model.enm.CaeModalidadeEnum;
 import br.jus.trf2.temis.cae.model.enm.CaeOrgaoEnum;
 import br.jus.trf2.temis.cae.model.enm.CaeParticipacaoEnum;
+import br.jus.trf2.temis.cae.model.enm.CaeSituacaoDaInscricaoNaAtividadeEnum;
 import br.jus.trf2.temis.cae.model.enm.CaeTipoDeAtividadeEnum;
 import br.jus.trf2.temis.cae.model.enm.CaeTurnoEnum;
 import br.jus.trf2.temis.cae.model.event.CaeEventoDeAtividadeAprovacao;
@@ -61,7 +62,7 @@ import lombok.experimental.FieldNameConstants;
 @FieldNameConstants
 @MenuList
 @MenuCreate
-@Global(singular = "Atividade", plural = "Atividades", gender = Gender.SHE, locator = "cae-atividade", codePrefix = "AT", deletable = true)
+@Global(singular = "Atividade", plural = "Atividades", gender = Gender.SHE, codePrefix = "AT", deletable = true)
 public class CaeAtividade extends Entidade {
 
 	@Entity
@@ -98,6 +99,18 @@ public class CaeAtividade extends Entidade {
 
 		public boolean isReprovada() {
 			return temReferenciaDaClasse(CaeEventoDeAtividadeReprovacao.class);
+		}
+		
+		public CaeSituacaoDaInscricaoNaAtividadeEnum getSituacaoDaInscricao() {
+			if (isReprovada())
+				return CaeSituacaoDaInscricaoNaAtividadeEnum.REPROVADA;
+			if (isAprovada())
+				return CaeSituacaoDaInscricaoNaAtividadeEnum.APROVADA;
+			if (isIndeferida())
+				return CaeSituacaoDaInscricaoNaAtividadeEnum.INDEFERIDA;
+			if (isDeferida())
+				return CaeSituacaoDaInscricaoNaAtividadeEnum.DEFERIDA;
+			return null;
 		}
 	}
 

@@ -37,7 +37,7 @@ import lombok.experimental.FieldNameConstants;
 @Setter
 @FieldNameConstants
 @MenuList
-@Global(singular = "Comissão Temática", plural = "Comissões Temáticas", gender = Gender.SHE, locator = "cae-tematica", codePrefix = "TM", deletable = true, inactivable = true)
+@Global(singular = "Comissão Temática", plural = "Comissões Temáticas", gender = Gender.SHE, codePrefix = "TM", deletable = true, inactivable = true)
 public class CaeTematica extends Entidade {
 
 	@Search
