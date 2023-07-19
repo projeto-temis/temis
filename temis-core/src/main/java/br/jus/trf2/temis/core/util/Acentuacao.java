@@ -12,6 +12,7 @@ public class Acentuacao {
 		CODIGO("código"),
 		HORARIO("horário"),
 		HORARIA("horária"),
+		MATRICULA("matrícula"),
 		MES("mês"),
 		NUMERO("número"),
 		INICIO("início"),

@@ -56,9 +56,11 @@ public class CaeRelatorioDeInscritosNaAtividade extends Relatorio {
 
 	@AllArgsConstructor(staticName = "of")
 	public static class Linha extends LinhaDeRelatorio {
+		@FieldProps(align = Align.RIGHT)
 		Integer ordem;
-		@FieldProps(align = Align.CENTER, format = Format.DATE)
+		@FieldProps(align = Align.CENTER, format = Format.DATE_HH_MM_SS)
 		Date dataDeInscricao;
+		@FieldProps(name = "Matrícula")
 		String matricula;
 		String magistrado;
 		CaeSituacaoDaInscricaoNaAtividadeEnum situacao;
