@@ -7,6 +7,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 
+import com.crivano.jbiz.IActor;
 import com.crivano.jlogic.Expression;
 import com.crivano.juia.annotations.Edit;
 import com.crivano.juia.annotations.Global;
@@ -18,7 +19,6 @@ import br.jus.trf2.temis.core.Arquivo;
 import br.jus.trf2.temis.core.Etiqueta;
 import br.jus.trf2.temis.core.action.ExibirPdf;
 import br.jus.trf2.temis.core.util.Utils;
-import br.jus.trf2.temis.iam.model.Agente;
 import br.jus.trf2.temis.pjd.logic.ProcessoPodeAutuar;
 import br.jus.trf2.temis.pjd.model.Processo;
 import br.jus.trf2.temis.pjd.model.Processo.EventoProcessual;
@@ -63,7 +63,7 @@ public class EventoProcessualAutuacao extends Processo.EventoProcessual implemen
 	}
 
 	@Override
-	public void execute(Agente actor, Agente onBehalfOf, Processo entity, EventoProcessual event, Etiqueta tag)
+	public void execute(IActor actor, IActor onBehalfOf, Processo entity, EventoProcessual event, Etiqueta tag)
 			throws Exception {
 		InputStream stream = this.getClass().getResourceAsStream("/peticao-inicial.pdf");
 		byte[] bytes = Utils.convertStreamToByteArray(stream, 2048);

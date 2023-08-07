@@ -10,6 +10,7 @@ import javax.persistence.Transient;
 
 import org.joda.time.LocalDate;
 
+import com.crivano.jbiz.IActor;
 import com.crivano.juia.annotations.Edit;
 import com.crivano.juia.annotations.EditKindEnum;
 import com.crivano.juia.annotations.Global;
@@ -25,7 +26,6 @@ import br.jus.trf2.temis.core.util.Dao;
 import br.jus.trf2.temis.core.util.FullSerialization;
 import br.jus.trf2.temis.core.util.ModeloUtils;
 import br.jus.trf2.temis.core.util.Utils;
-import br.jus.trf2.temis.iam.model.Agente;
 import br.jus.trf2.temis.pjd.model.Jurisprudencia;
 import br.jus.trf2.temis.pjd.model.Processo;
 import br.jus.trf2.temis.pjd.model.Processo.EventoProcessual;
@@ -117,7 +117,7 @@ public class EventoProcessualInclusaoDeJurisprudencia extends Processo.EventoPro
 	}
 
 	@Override
-	public void execute(Agente actor, Agente onBehalfOf, Processo element, EventoProcessual evento, Etiqueta etiqueta)
+	public void execute(IActor actor, IActor onBehalfOf, Processo element, EventoProcessual evento, Etiqueta etiqueta)
 			throws Exception {
 		Dao dao = ContextInterceptor.getDao();
 		HashSet<String> exceto = new HashSet<String>();

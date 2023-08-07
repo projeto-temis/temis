@@ -5,6 +5,7 @@ import java.util.SortedSet;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 
+import com.crivano.jbiz.IActor;
 import com.crivano.jlogic.Expression;
 import com.crivano.juia.annotations.Edit;
 import com.crivano.juia.annotations.Global;
@@ -56,7 +57,7 @@ public class CaeEventoDeAtividadeInscricao extends CaeEventoDeAtividade {
 	}
 
 	@Override
-	public Expression getActiveMiniAction(Agente actor, Agente onBehalfOf, CaeAtividade element, Acao miniAction) {
+	public Expression getActiveMiniAction(IActor actor, IActor onBehalfOf, CaeAtividade element, Acao miniAction) {
 		if (miniAction instanceof CaeEventoDeAtividadeDeferimento)
 			return CaePodeDeferirParticipacaoEmAtividade.of(this);
 		if (miniAction instanceof CaeEventoDeAtividadeIndeferimento)

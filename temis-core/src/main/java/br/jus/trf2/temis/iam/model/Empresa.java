@@ -1,5 +1,6 @@
 package br.jus.trf2.temis.iam.model;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.Entity;
@@ -17,11 +18,24 @@ import com.crivano.juia.annotations.Global.Gender;
 import com.crivano.juia.annotations.Search;
 
 import br.jus.trf2.temis.core.Entidade;
+import br.jus.trf2.temis.crp.model.CrpIdentidade;
+import br.jus.trf2.temis.crp.model.CrpLotacao;
+import br.jus.trf2.temis.crp.model.CrpOrgaoUsuario;
+import br.jus.trf2.temis.crp.model.CrpTipoDeLotacao;
 import br.jus.trf2.temis.iam.model.enm.AgentePapelEnum;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.experimental.FieldNameConstants;
 
 @Entity
-@Data
+@Getter
+@Setter
+@NoArgsConstructor
+@EqualsAndHashCode
+@FieldNameConstants
 @Global(singular = "Empresa", plural = "Empresas", gender = Gender.SHE, locator = "iam-empresa")
 public class Empresa extends Entidade implements Comparable<Empresa> {
 

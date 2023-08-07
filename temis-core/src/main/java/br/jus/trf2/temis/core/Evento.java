@@ -36,7 +36,7 @@ import lombok.experimental.FieldNameConstants;
 @Data
 @FieldNameConstants
 public abstract class Evento<E extends IEntidade, V extends Evento<E, V>> extends Objeto implements
-		IJuiaEvent<E, Agente, V, Acao<E, Agente, V>, Etiqueta>, Acao<E, Agente, V>, Comparable<Evento<E, ?>> {
+		IJuiaEvent<E, IActor, V, Acao<E, IActor, V>, Etiqueta>, Acao<E, IActor, V>, Comparable<Evento<E, ?>> {
 	@IgnoreForSimilarity
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -84,7 +84,7 @@ public abstract class Evento<E extends IEntidade, V extends Evento<E, V>> extend
 	}
 
 	@Override
-	public void execute(Agente actor, Agente onBehalfOf, E entity, V event, Etiqueta tag) throws Exception {
+	public void execute(IActor actor, IActor onBehalfOf, E entity, V event, Etiqueta tag) throws Exception {
 		entity.addEvent(this);
 		String mappedBy = entity.getClass().getDeclaredField("evento").getAnnotation(OneToMany.class).mappedBy();
 		Class clazz = this.getClass();
@@ -102,11 +102,11 @@ public abstract class Evento<E extends IEntidade, V extends Evento<E, V>> extend
 	}
 
 	@Override
-	public Expression getActiveMiniAction(Agente actor, Agente onBehalfOf, E element, Acao miniAction) {
+	public Expression getActiveMiniAction(IActor actor, IActor onBehalfOf, E element, Acao miniAction) {
 		return new PodeSim();
 	}
 
-	public Expression getRequiredMiniAction(Agente actor, Agente onBehalfOf, E element, Acao miniAction) {
+	public Expression getRequiredMiniAction(IActor actor, IActor onBehalfOf, E element, Acao miniAction) {
 		return null;
 	}
 

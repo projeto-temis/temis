@@ -1,5 +1,6 @@
 package br.jus.trf2.temis.core.action;
 
+import com.crivano.jbiz.IActor;
 import com.crivano.juia.annotations.Global;
 import com.crivano.juia.annotations.Global.Gender;
 
@@ -7,7 +8,6 @@ import br.jus.trf2.temis.core.Entidade;
 import br.jus.trf2.temis.core.Etiqueta;
 import br.jus.trf2.temis.core.Evento;
 import br.jus.trf2.temis.core.util.ContextInterceptor;
-import br.jus.trf2.temis.iam.model.Agente;
 import lombok.Data;
 
 @Data
@@ -25,7 +25,7 @@ public class CancelarMiniAction<E extends Entidade, V extends Evento<E, V>> exte
 	}
 
 	@Override
-	public void execute(Agente actor, Agente onBehalfOf, E entity, V event, Etiqueta tag) throws Exception {
+	public void execute(IActor actor, IActor onBehalfOf, E entity, V event, Etiqueta tag) throws Exception {
 		entity.removeChange(event);
 		ContextInterceptor.getDao().persist(entity);
 	}

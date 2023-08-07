@@ -1,6 +1,7 @@
 package br.jus.trf2.temis.iam.model;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.SortedSet;
 
@@ -31,14 +32,23 @@ import br.jus.trf2.temis.core.action.Editar;
 import br.jus.trf2.temis.core.enm.TipoDePessoaJuridicaEnum;
 import br.jus.trf2.temis.core.util.DescrBuilder;
 import br.jus.trf2.temis.core.util.Utils;
+import br.jus.trf2.temis.crp.model.CrpIdentidade;
+import br.jus.trf2.temis.crp.model.CrpLotacao;
+import br.jus.trf2.temis.crp.model.CrpOrgaoUsuario;
+import br.jus.trf2.temis.crp.model.CrpTipoDeLotacao;
 import br.jus.trf2.temis.iam.model.enm.TipoDePessoaEnum;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.experimental.FieldNameConstants;
 
 @Entity
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
+@EqualsAndHashCode
 @FieldNameConstants
 @Global(singular = "Pessoa", plural = "Pessoas", gender = Gender.SHE, locator = "iam-pessoa", versionable = true)
 public class Pessoa extends Entidade implements Comparable<Pessoa> {

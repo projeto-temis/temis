@@ -27,8 +27,11 @@ import java.util.SortedSet;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -43,8 +46,12 @@ import com.crivano.juia.annotations.Search;
 import br.jus.trf2.temis.core.Etiqueta;
 import br.jus.trf2.temis.core.Evento;
 import br.jus.trf2.temis.core.IEntidade;
-import br.jus.trf2.temis.core.util.Utils;
+import br.jus.trf2.temis.core.util.ModeloUtils.Desconsiderar;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.experimental.FieldNameConstants;
 
 @Table(name = "corporativo.dp_pessoa")
@@ -52,9 +59,12 @@ import lombok.experimental.FieldNameConstants;
 // @SqlResultSetMapping(name = "scalar", columns = @ColumnResult(name = "dt"))
 //@Cache(region = CpDao.CACHE_CORPORATIVO, usage = CacheConcurrencyStrategy.TRANSACTIONAL)
 @Global(singular = "Pessoa", plural = "Pessoas", gender = Gender.SHE, locator = "crp-pessoa", versionable = true)
-@Data
+@Getter
+@Setter
+@NoArgsConstructor
+@EqualsAndHashCode
 @FieldNameConstants
-public class CrpPessoa implements IEntidade, IActor, Comparable<CrpPessoa> {
+public class CrpPessoa implements IEntidade, IActor, Comparable<CrpPessoa>, Historico<CrpPessoa> {
 
 	@Id
 	@SequenceGenerator(name = "DP_PESSOA_SEQ", sequenceName = "CORPORATIVO.DP_PESSOA_SEQ")
@@ -65,7 +75,7 @@ public class CrpPessoa implements IEntidade, IActor, Comparable<CrpPessoa> {
 
 	@Column(name = "ID_PESSOA_INICIAL")
 //	@Desconsiderar
-	private Long idIni;
+	private Long idInicial;
 
 	@Column(name = "DATA_FIM_PESSOA", length = 19)
 	@Temporal(TemporalType.TIMESTAMP)
@@ -78,7 +88,7 @@ public class CrpPessoa implements IEntidade, IActor, Comparable<CrpPessoa> {
 
 	@Column(name = "IDE_PESSOA", length = 256)
 //	@Desconsiderar
-	private String ide;
+	private String idExterna;
 
 	@Temporal(TemporalType.DATE)
 	@Column(name = "DATA_NASC_PESSOA")
@@ -88,15 +98,9 @@ public class CrpPessoa implements IEntidade, IActor, Comparable<CrpPessoa> {
 	@Column(name = "NOME_PESSOA", nullable = false, length = 60)
 	private String nome;
 
-	/*
-	 * Alteracao cartao 1041
-	 */
 	@Column(name = "NOME_PESSOA_AI", length = 60)
-//	@Desconsiderar
+	@Desconsiderar
 	private java.lang.String nomeAI;
-	/*
-	 * Final Alteracao 1041
-	 */
 
 	@Search(caption = "CPF")
 	@Column(name = "CPF_PESSOA", nullable = false)
@@ -197,37 +201,26 @@ public class CrpPessoa implements IEntidade, IActor, Comparable<CrpPessoa> {
 	@Column(name = "NOME_EXIBICAO")
 	private String nomeExibicao;
 
-//	@ManyToOne(fetch = FetchType.LAZY)
-//	@JoinColumn(name = "ID_PESSOA_INICIAL", insertable = false, updatable = false)
-//	@Desconsiderar
-//	private DpPessoa pessoaInicial;
-//
-//	@ManyToOne(fetch = FetchType.LAZY)
-//	@JoinColumn(name = "ID_LOTACAO")
-//	private DpLotacao lotacao;
-//
-//	@ManyToOne(fetch = FetchType.LAZY)
-//	@JoinColumn(name = "ID_CARGO")
-//	private DpCargo cargo;
-//
-//	@ManyToOne(fetch = FetchType.LAZY)
-//	@JoinColumn(name = "ID_FUNCAO_CONFIANCA")
-//	private DpFuncaoConfianca funcaoConfianca;
-//
-//	@ManyToOne(fetch = FetchType.LAZY)
-//	@JoinColumn(name = "ID_ORGAO_USU")
-//	@Desconsiderar
-//	private CpOrgaoUsuario orgaoUsuario;
-//
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "ID_LOTACAO")
+	private CrpLotacao lotacao;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "ID_CARGO")
+	private CrpCargo cargo;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "ID_FUNCAO_CONFIANCA")
+	private CrpFuncaoConfianca funcaoConfianca;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "ID_ORGAO_USU")
+	@Desconsiderar
+	private CrpOrgaoUsuario orgaoUsuario;
+
 //	@ManyToOne(fetch = FetchType.LAZY)
 //	@JoinColumn(name = "ID_TP_PESSOA")
 //	private CpTipoPessoa cpTipo;
-//
-//	@OneToMany(fetch = FetchType.LAZY, mappedBy = "pessoaInicial")
-//	@OrderBy("idPessoa DESC")
-//	@Desconsiderar
-//	// private Set<DpPessoa> pessoasPosteriores = new HashSet<DpPessoa>(0);
-//	private Set<DpPessoa> pessoasPosteriores;
 //
 //	@ManyToOne(fetch = FetchType.LAZY)
 //	@JoinColumn(name = "HIS_IDC_INI")
@@ -299,7 +292,7 @@ public class CrpPessoa implements IEntidade, IActor, Comparable<CrpPessoa> {
 
 	@Override
 	public int compareTo(CrpPessoa o) {
-		return Utils.compare(this.getIdIni(), o.getIdIni());
+		// TODO Auto-generated method stub
+		return 0;
 	}
-
 }

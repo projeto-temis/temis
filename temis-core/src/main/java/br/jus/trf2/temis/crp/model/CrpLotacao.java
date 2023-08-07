@@ -27,8 +27,11 @@ import java.util.SortedSet;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -42,8 +45,12 @@ import com.crivano.juia.annotations.Search;
 import br.jus.trf2.temis.core.Etiqueta;
 import br.jus.trf2.temis.core.Evento;
 import br.jus.trf2.temis.core.IEntidade;
+import br.jus.trf2.temis.core.util.ModeloUtils.Desconsiderar;
 import br.jus.trf2.temis.core.util.Utils;
-import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.experimental.FieldNameConstants;
 
 @Table(name = "corporativo.dp_lotacao")
@@ -51,9 +58,12 @@ import lombok.experimental.FieldNameConstants;
 // @SqlResultSetMapping(name = "scalar", columns = @ColumnResult(name = "dt"))
 //@Cache(region = CpDao.CACHE_CORPORATIVO, usage = CacheConcurrencyStrategy.TRANSACTIONAL)
 @Global(singular = "Lotação", plural = "Lotações", gender = Gender.SHE, locator = "crp-lotacao", versionable = true)
-@Data
+@Getter
+@Setter
+@NoArgsConstructor
+@EqualsAndHashCode
 @FieldNameConstants
-public class CrpLotacao implements IEntidade, Comparable<CrpLotacao> {
+public class CrpLotacao implements IEntidade, Comparable<CrpLotacao>, Historico<CrpLotacao> {
 
 	@Id
 	@SequenceGenerator(name = "DP_LOTACAO_SEQ", sequenceName = "CORPORATIVO.DP_LOTACAO_SEQ")
@@ -62,7 +72,7 @@ public class CrpLotacao implements IEntidade, Comparable<CrpLotacao> {
 	private Long id;
 
 	@Column(name = "ID_LOTACAO_INI")
-	private Long idIni;
+	private Long idInicial;
 
 	@Search
 	@Column(name = "SIGLA_LOTACAO", length = 30)
@@ -81,37 +91,28 @@ public class CrpLotacao implements IEntidade, Comparable<CrpLotacao> {
 	private Date inicio;
 
 	@Column(name = "IDE_LOTACAO")
-	private String ide;
+	private String idExterna;
 
-//	@ManyToOne(fetch = FetchType.LAZY)
-//	@JoinColumn(name = "ID_LOTACAO_INI", insertable = false, updatable = false)
-//	@Desconsiderar
-//	private DpLotacao lotacaoInicial;
-//
-//	@ManyToOne(fetch = FetchType.LAZY)
-//	@JoinColumn(name = "ID_LOTACAO_PAI")
-//	private DpLotacao lotacaoPai;
-//
-//	@OneToMany(fetch = FetchType.LAZY, mappedBy = "lotacaoInicial")
-//	@Desconsiderar
-//	private Set<DpLotacao> lotacoesPosteriores = new TreeSet<DpLotacao>();
-//
-//	@ManyToOne(fetch = FetchType.LAZY)
-//	@JoinColumn(name = "ID_ORGAO_USU", nullable = false)
-//	private CpOrgaoUsuario orgaoUsuario;
-//
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "ID_LOTACAO_PAI")
+	private CrpLotacao pai;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "ID_ORGAO_USU", nullable = false)
+	private CrpOrgaoUsuario orgao;
+
 //	@OneToMany(fetch = FetchType.LAZY, mappedBy = "lotacaoPai")
 //	@Desconsiderar
 //	private Set<DpLotacao> dpLotacaoSubordinadosSet = new TreeSet<DpLotacao>();
-//
-//	@OneToMany(fetch = FetchType.LAZY, mappedBy = "lotacao")
+
+	// @OneToMany(fetch = FetchType.LAZY, mappedBy = "lotacao")
 //	@Where(clause = "DATA_FIM_PESSOA is null")
 //	@Desconsiderar
 //	private Set<DpPessoa> dpPessoaLotadosSet = new TreeSet<DpPessoa>();
-//
-//	@ManyToOne(fetch = FetchType.LAZY)
-//	@JoinColumn(name = "ID_TP_LOTACAO")
-//	private CpTipoLotacao cpTipoLotacao;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "ID_TP_LOTACAO")
+	private CrpTipoDeLotacao tipo;
 //	
 //	@ManyToOne(fetch = FetchType.LAZY)
 //	@JoinColumn(name = "ID_LOCALIDADE")
@@ -120,15 +121,15 @@ public class CrpLotacao implements IEntidade, Comparable<CrpLotacao> {
 	@Column(name = "IS_EXTERNA_LOTACAO")
 	private Integer externa;
 
-//	@ManyToOne(fetch=FetchType.LAZY)
-//    @JoinColumn(name="HIS_IDC_INI")
-//    @Desconsiderar
-//	private CpIdentidade hisIdcIni;
-//
-//	@ManyToOne(fetch=FetchType.LAZY)
-//    @JoinColumn(name="HIS_IDC_FIM")
-//    @Desconsiderar
-//	private CpIdentidade hisIdcFim;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "HIS_IDC_INI")
+	@Desconsiderar
+	private CrpIdentidade identidadeInicio;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "HIS_IDC_FIM")
+	@Desconsiderar
+	private CrpIdentidade identidadeTermino;
 
 	@Column(name = "IS_SUSPENSA")
 	private Integer suspensa;
@@ -199,6 +200,6 @@ public class CrpLotacao implements IEntidade, Comparable<CrpLotacao> {
 
 	@Override
 	public int compareTo(CrpLotacao o) {
-		return Utils.compare(this.getIdIni(), o.getIdIni());
+		return Utils.compare(this.getIdInicial(), o.getIdInicial());
 	}
 }

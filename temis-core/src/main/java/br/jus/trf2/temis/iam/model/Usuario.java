@@ -1,5 +1,6 @@
 package br.jus.trf2.temis.iam.model;
 
+import java.util.Date;
 import java.util.Set;
 import java.util.SortedSet;
 
@@ -17,10 +18,23 @@ import com.crivano.juia.annotations.Global.Gender;
 import com.crivano.juia.annotations.Search;
 
 import br.jus.trf2.temis.core.util.Utils;
+import br.jus.trf2.temis.crp.model.CrpIdentidade;
+import br.jus.trf2.temis.crp.model.CrpLotacao;
+import br.jus.trf2.temis.crp.model.CrpOrgaoUsuario;
+import br.jus.trf2.temis.crp.model.CrpTipoDeLotacao;
 import br.jus.trf2.temis.iam.model.enm.AgentePapelEnum;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.experimental.FieldNameConstants;
 
-@Data
+@Getter
+@Setter
+@NoArgsConstructor
+@EqualsAndHashCode
+@FieldNameConstants
 @Global(singular = "Usuário", plural = "Usuários", gender = Gender.HE, locator = "iam-usuario")
 public class Usuario extends Agente implements IPersistent {
 	public static class XPapel implements Comparable<XPapel> {

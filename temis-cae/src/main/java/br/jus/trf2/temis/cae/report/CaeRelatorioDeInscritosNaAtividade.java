@@ -12,6 +12,7 @@ import org.joda.time.LocalDate;
 
 import com.crivano.juia.annotations.Edit;
 import com.crivano.juia.annotations.FieldProps;
+import com.crivano.juia.annotations.FieldProps.AggregateInJsonArray;
 import com.crivano.juia.annotations.FieldProps.Align;
 import com.crivano.juia.annotations.FieldProps.Format;
 import com.crivano.juia.annotations.Global;
@@ -58,7 +59,7 @@ public class CaeRelatorioDeInscritosNaAtividade extends Relatorio {
 	public static class Linha extends LinhaDeRelatorio {
 		@FieldProps(align = Align.RIGHT)
 		Integer ordem;
-		@FieldProps(align = Align.CENTER, format = Format.DATE_HH_MM_SS)
+		@FieldProps(align = Align.CENTER, format = Format.DATE_HH_MM_SS, aggregateInJsonArray = AggregateInJsonArray.YYYY_MM_DD)
 		Date dataDeInscricao;
 		@FieldProps(name = "Matrícula")
 		String matricula;
@@ -71,7 +72,7 @@ public class CaeRelatorioDeInscritosNaAtividade extends Relatorio {
 		dataDaAtividade = atividade.getDataDeInicio();
 		tipo = atividade.getTipo();
 		tema = atividade.getTema();
-		
+
 		SortedSet<CaeEventoDeAtividadeInscricao> inscrs = atividade
 				.getEventosAtivos(CaeEventoDeAtividadeInscricao.class);
 

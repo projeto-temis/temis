@@ -33,6 +33,7 @@ import com.crivano.juia.util.JuiaUtils;
 import br.jus.trf2.temis.core.util.ContextInterceptor;
 import br.jus.trf2.temis.core.util.ModeloUtils;
 import br.jus.trf2.temis.core.util.NoSerialization;
+import br.jus.trf2.temis.crp.model.CrpIdentidade;
 import br.jus.trf2.temis.crp.model.CrpLotacao;
 import br.jus.trf2.temis.crp.model.CrpPessoa;
 import lombok.Data;
@@ -66,10 +67,13 @@ public abstract class Entidade extends Objeto implements IEntidade {
 	private String codigo;
 
 	@ManyToOne
-	private CrpPessoa pessoaCadastrante;
+	private CrpIdentidade identidadeCadastrante;
 	@ManyToOne
-	private CrpLotacao unidadeCadastrante;
+	private CrpPessoa pessoaTitular;
+	@ManyToOne
+	private CrpLotacao lotacaoTitular;
 
+	@IgnoreForSimilarity
 	@NoSerialization
 	@OneToMany(mappedBy = Etiqueta.Fields.entidade, cascade = CascadeType.ALL)
 	@OrderBy(Etiqueta.Fields.inicio)
@@ -94,6 +98,12 @@ public abstract class Entidade extends Objeto implements IEntidade {
 
 	@PrePersist
 	public void onSave() {
+		if (identidadeCadastrante == null)
+			identidadeCadastrante = ContextInterceptor.getContext().getIdentidade();
+		if (pessoaTitular == null)
+			pessoaTitular = ContextInterceptor.getContext().getTitular();
+		if (lotacaoTitular == null)
+			lotacaoTitular = ContextInterceptor.getContext().getLotaTitular();
 		if (codigo == null && getCodePrefix() != null)
 			codigo = buildCode();
 	}
@@ -221,6 +231,7 @@ public abstract class Entidade extends Objeto implements IEntidade {
 
 		SortedSet<Etiqueta> lOrig = (SortedSet<Etiqueta>) (SortedSet) getTags();
 		SortedSet<Etiqueta> lDest = getEtiqueta();
+		SortedSet<Etiqueta> lToRemove = new TreeSet<>();
 
 		SortedSet<Etiqueta> lTemp = new TreeSet<>();
 		lTemp.addAll(lDest);
@@ -236,10 +247,12 @@ public abstract class Entidade extends Objeto implements IEntidade {
 					}
 				}
 				if (!encontrado) {
-					lDest.remove(oDest);
+					lToRemove.add(oDest);
 					ContextInterceptor.getDao().remove(oDest);
 				}
 			}
+			lDest.removeAll(lToRemove);
+
 			for (Etiqueta oOrig : lOrig) {
 				boolean encontrado = false;
 				// remover itens de destino que não existem na origem,
@@ -262,4 +275,10 @@ public abstract class Entidade extends Objeto implements IEntidade {
 	public Long getEntiId() {
 		return id;
 	}
+
+	@Override
+	public int hashCode() {
+		return id.hashCode();
+	}
+
 }

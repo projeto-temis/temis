@@ -25,6 +25,8 @@ public enum GrupoDeMarcadorEnum implements IEnum {
 	//
 	MONITORANDO("Monitorando", "hourglass-half"),
 	//
+	HISTORICO("Histórico", "paper-plane"),
+	//
 	OUTROS("Outros", "paper-plane"),
 	//
 	QUALQUER("Qualquer", "inbox"),

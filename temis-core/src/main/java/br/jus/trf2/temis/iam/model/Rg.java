@@ -1,5 +1,7 @@
 package br.jus.trf2.temis.iam.model;
 
+import java.util.Date;
+
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 
@@ -9,10 +11,23 @@ import com.crivano.juia.annotations.Edit;
 import com.crivano.juia.annotations.Global;
 import com.crivano.juia.annotations.Global.Gender;
 
+import br.jus.trf2.temis.crp.model.CrpIdentidade;
+import br.jus.trf2.temis.crp.model.CrpLotacao;
+import br.jus.trf2.temis.crp.model.CrpOrgaoUsuario;
+import br.jus.trf2.temis.crp.model.CrpTipoDeLotacao;
 import br.jus.trf2.temis.iam.model.enm.UfEnum;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.experimental.FieldNameConstants;
 
-@Data
+@Getter
+@Setter
+@NoArgsConstructor
+@EqualsAndHashCode
+@FieldNameConstants
 @Global(singular = "RG", plural = "RGs", gender = Gender.HE)
 public class Rg {
 	@Edit(caption = "Número", colM = 6, colL = 3)

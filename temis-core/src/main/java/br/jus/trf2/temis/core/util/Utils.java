@@ -14,6 +14,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
 
+import org.hibernate.proxy.HibernateProxy;
+import org.hibernate.proxy.LazyInitializer;
 import org.joda.time.DateTimeZone;
 import org.joda.time.LocalDate;
 import org.joda.time.LocalDateTime;
@@ -312,4 +314,12 @@ public class Utils {
 				+ (link == null ? entidade.getCode() : link) + "</a>";
 	}
 
+	public static Class<?> getClassForHibernateObject(Object object) {
+		if (object instanceof HibernateProxy) {
+			LazyInitializer lazyInitializer = ((HibernateProxy) object).getHibernateLazyInitializer();
+			return lazyInitializer.getPersistentClass();
+		} else {
+			return object.getClass();
+		}
+	}
 }

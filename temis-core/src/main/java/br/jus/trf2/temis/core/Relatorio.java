@@ -20,13 +20,16 @@ import org.jsoup.nodes.Document;
 import com.crivano.jbiz.IEnum;
 import com.crivano.juia.annotations.Edit;
 import com.crivano.juia.annotations.FieldProps;
+import com.crivano.juia.annotations.FieldProps.AggregateInJsonArray;
 import com.crivano.juia.annotations.FieldProps.Align;
 import com.crivano.juia.annotations.FieldProps.Format;
 import com.crivano.juia.annotations.FieldSet;
 import com.crivano.juia.annotations.Global;
 import com.crivano.juia.annotations.Show;
 import com.crivano.juia.biz.IJuiaAction;
+import com.crivano.swaggerservlet.DefaultDateAdapter;
 import com.crivano.swaggerservlet.SwaggerUtils;
+import com.google.gson.JsonArray;
 import com.openhtmltopdf.pdfboxout.PdfRendererBuilder;
 
 import br.jus.trf2.temis.core.util.ModeloUtils;
@@ -91,6 +94,88 @@ public abstract class Relatorio extends Objeto implements IJuiaAction {
 			}
 			return out.toString();
 		} catch (IOException | IllegalArgumentException | IllegalAccessException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	public String gerarJsonArray() {
+		final JsonArray r = new JsonArray();
+
+		try {
+			// Colunas
+			JsonArray header = new JsonArray();
+			for (Field f : fields) {
+				if (f.getName().equals("tipoDeLinha"))
+					continue;
+				FieldProps props = f.getAnnotation(FieldProps.class);
+				if (props != null && props.aggregateInJsonArray() != null
+						&& props.aggregateInJsonArray() == AggregateInJsonArray.YYYY_MM_DD) {
+					String suffix = getFieldName(f);
+					if (suffix.startsWith("Data"))
+						suffix = suffix.substring(4);
+					else
+						suffix = " de " + suffix;
+					header.add("Ano" + suffix);
+					header.add("Mês" + suffix);
+					header.add("Dia" + suffix);
+				} else
+					header.add(getFieldName(f));
+			}
+			r.add(header);
+			// Linhas
+			for (LinhaDeRelatorio l : linhas) {
+				if (l.getTipoDeLinha() == TipoDeLinhaDeRelatorioEnum.DETALHE) {
+					JsonArray line = new JsonArray();
+					for (Field f : fields) {
+						if (f.getName().equals("tipoDeLinha"))
+							continue;
+						Object value = f.get(l);
+
+						// Agregar datas em 3 campos
+						FieldProps props = f.getAnnotation(FieldProps.class);
+						if (props != null && props.aggregateInJsonArray() != null
+								&& props.aggregateInJsonArray() == AggregateInJsonArray.YYYY_MM_DD) {
+							if (value == null) {
+								line.add((Number) null);
+								line.add((Number) null);
+								line.add((Number) null);
+								continue;
+							}
+							String data = formatar(l, f);
+							line.add(data.substring(6, 11));
+							line.add(data.substring(3, 5));
+							line.add(data.substring(0, 2));
+							continue;
+						}
+
+						if (value == null)
+							line.add((Number) null);
+						else if (value instanceof Boolean)
+							line.add((Boolean) value);
+						else if (value instanceof String)
+							line.add((String) value);
+						else if (value instanceof Double)
+							line.add((Double) value);
+						else if (value instanceof Float)
+							line.add((Float) value);
+						else if (value instanceof Integer)
+							line.add((Integer) value);
+						else if (value instanceof Long)
+							line.add((Long) value);
+						else if (value instanceof Date)
+							line.add(new DefaultDateAdapter().format((Date) value));
+						else if (value instanceof IEntidade)
+							line.add(((IEntidade) value).getDescr());
+						else if (value instanceof IEnum)
+							line.add(((IEnum) value).getDescr());
+						else
+							throw new RuntimeException("Tipo de dado não suportado: " + value.getClass().getName());
+					}
+					r.add(line);
+				}
+			}
+			return r.toString();
+		} catch (IllegalArgumentException | IllegalAccessException e) {
 			throw new RuntimeException(e);
 		}
 	}

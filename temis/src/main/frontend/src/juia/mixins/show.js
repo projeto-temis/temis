@@ -35,6 +35,10 @@ export default {
             if (!this.event) return [];
             return this.event.filter(e => this.audit ? e.visibilidade !== 'EXIBIR_NUNCA' : e.visibilidade === 'EXIBIR_SEMPRE');
         },
+        filteredTags: function () {
+            if (!this.tag) return [];
+            return this.tag.filter(e => this.audit ? true : e.ativoAgora && (e.visibilidade == 'GERAL' || (e.visibilidade == 'MARCADOS' && (e.bPessoa || e.bUnidade))));
+        },
         action: function () {
             return this.$refs.action;
         },

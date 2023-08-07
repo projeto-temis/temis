@@ -85,14 +85,17 @@ import br.jus.trf2.temis.core.Etiqueta;
 import br.jus.trf2.temis.core.Evento;
 import br.jus.trf2.temis.core.IEntidade;
 import br.jus.trf2.temis.core.VisibilidadeDeEventoEnum;
+import br.jus.trf2.temis.core.enm.TipoDeExibicaoDeMarcadorEnum;
 import br.jus.trf2.temis.core.util.AppResources;
 import br.jus.trf2.temis.core.util.BadRequestException;
+import br.jus.trf2.temis.core.util.ContextInterceptor;
 import br.jus.trf2.temis.core.util.Dao;
 import br.jus.trf2.temis.core.util.DataUtils;
 import br.jus.trf2.temis.core.util.ModeloUtils;
 import br.jus.trf2.temis.core.util.Texto;
 import br.jus.trf2.temis.core.util.Utils;
-import br.jus.trf2.temis.iam.model.Usuario;
+import br.jus.trf2.temis.crp.model.CrpPessoa;
+import br.jus.trf2.temis.crp.model.CrpUsuario;
 
 public abstract class ControllerSupport<T extends IEntidade> {
 	Logger logger = Logger.getLogger(this.getClass().getCanonicalName());
@@ -237,7 +240,7 @@ public abstract class ControllerSupport<T extends IEntidade> {
 	@Get
 	@Path("dadoseacoes/{key}")
 	public void getDataAndActions(Long key) throws Exception {
-		Usuario usuario = assertUsuarioAutorizado(key);
+		CrpUsuario usuario = assertUsuarioAutorizado(key);
 
 		// Get data
 		//
@@ -350,8 +353,13 @@ public abstract class ControllerSupport<T extends IEntidade> {
 		result.use(Results.json()).withoutRoot().from(dea).recursive().serialize();
 	}
 
-	private Usuario assertUsuarioAutorizado(Long key) {
-		return null;
+	private CrpUsuario assertUsuarioAutorizado(Long key) {
+		CrpUsuario usuario = new CrpUsuario();
+		CrpPessoa cadastrante = ContextInterceptor.getContext().getCadastrante();
+		usuario.setPessoa(cadastrante);
+		usuario.setEmpresa(cadastrante.getOrgaoUsuario());
+		usuario.setEmail(cadastrante.getEmail());
+		return usuario;
 	}
 
 	private static class DtoReference {
@@ -359,9 +367,10 @@ public abstract class ControllerSupport<T extends IEntidade> {
 	}
 
 	private static class DtoTag {
-		public DtoTag(Etiqueta tag, Usuario usuario) {
+		public DtoTag(Etiqueta tag, CrpUsuario usuario) {
 			this.nome = tag.getMarcador().getNome();
 			this.icon = tag.getMarcador().getIcone();
+			this.visibilidade = tag.getMarcador().getExibicao();
 			this.titulo = Utils.calcularTempoRelativo(tag.getInicio());
 
 			if (tag.getPessoa() != null)
@@ -371,12 +380,21 @@ public abstract class ControllerSupport<T extends IEntidade> {
 			this.begin = Utils.calcularTempoRelativo(tag.getInicio());
 			this.finish = Utils.calcularTempoRelativo(tag.getTermino());
 			if (usuario != null) {
-				if (usuario.getPessoa() != null && usuario.getPessoa().equals(tag.getPessoa()))
+				if (usuario.getPessoa() != null 
+						&& usuario.getPessoa().equals(tag.getPessoa()))
 					this.bPessoa = true;
-				if (usuario.getPapel() != null && usuario.getPapel().getUnidade() != null
-						&& usuario.getPapel().getUnidade().equals(tag.getUnidade()))
+//				if (usuario.getPapel() != null && usuario.getPapel().getUnidade() != null
+//						&& usuario.getPapel().getUnidade().equals(tag.getUnidade()))
+				if (usuario.getPessoa() != null && usuario.getPessoa().getLotacao() != null
+						&& usuario.getPessoa().getLotacao().equals(tag.getUnidade()))
 					this.bUnidade = true;
 			}
+			this.ativoAgora = true;
+			Date now = new Date();
+			if (tag.getInicio() != null && tag.getInicio().after(now))
+				this.ativoAgora = false;
+			if (tag.getTermino() != null && tag.getTermino().before(now))
+				this.ativoAgora = false;
 		}
 
 		String pessoa;
@@ -388,6 +406,8 @@ public abstract class ControllerSupport<T extends IEntidade> {
 		String finish;
 		boolean bPessoa;
 		boolean bUnidade;
+		boolean ativoAgora;
+		TipoDeExibicaoDeMarcadorEnum visibilidade;
 	}
 
 	@Get
@@ -412,7 +432,7 @@ public abstract class ControllerSupport<T extends IEntidade> {
 	@Delete
 	@Path("dados/{key}")
 	public void delete(Long key) {
-		Usuario usuario = assertUsuarioAutorizado(key);
+		assertUsuarioAutorizado(key);
 		T data = em.find(myClass, key);
 		dao.remove(data);
 		result.use(Results.json()).from(data, "data").recursive().serialize();
@@ -512,7 +532,7 @@ public abstract class ControllerSupport<T extends IEntidade> {
 	@Get
 	@Path("acao/{name}/{key}")
 	public void getAcao(String name, Long key, Long idEvento) throws Exception {
-		Usuario usuario = assertUsuarioAutorizado(key);
+		CrpUsuario usuario = assertUsuarioAutorizado(key);
 
 		// Get data
 		//
@@ -571,7 +591,7 @@ public abstract class ControllerSupport<T extends IEntidade> {
 	@Post
 	@Path("acao/{name}/{key}")
 	public void postAcao(String name, Long key, Long idEvento, Long idEtiqueta) throws Exception {
-		Usuario usuario = assertUsuarioAutorizado(key);
+		CrpUsuario usuario = assertUsuarioAutorizado(key);
 
 		// Get data
 		//
@@ -1058,7 +1078,7 @@ public abstract class ControllerSupport<T extends IEntidade> {
 
 			// Botões
 			Ul ul = new Ul(col, new ClassAttribute("list-inline", "margin-bottom-0"));
-			Li li = new Li(ul, new CustomAttribute("v-for", "t in tag")
+			Li li = new Li(ul, new CustomAttribute("v-for", "t in filteredTags")
 			// new CustomAttribute("v-if", "t.bPessoa || t.bUnidade")
 			);
 			A a = new A(li, new ClassAttribute("btn btn-light xrp-label"));

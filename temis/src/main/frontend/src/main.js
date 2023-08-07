@@ -155,6 +155,16 @@ Vue.use(VueTheMask)
 
 Vue.use(VueResource);
 
+Vue.http.interceptors.push(function () {
+  return function (res) {
+    if (res.status == 401) {
+      // if error code is 401 then redirect to login
+      window.location.href = `http://localhost:8080/siga/public/app/login?cont=${window.location.href}`
+    }
+
+  };
+})
+
 console.log(process.env.VUE_APP_API_URL)
 Vue.http.options.root = process.env.VUE_APP_API_URL
 Vue.http.options.credentials = true

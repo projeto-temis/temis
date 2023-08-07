@@ -2,21 +2,33 @@ package br.jus.trf2.temis.cae.model.enm;
 
 import com.crivano.jbiz.IEnum;
 
+import br.jus.trf2.temis.cae.model.CaeAtividade.CaeEventoDeAtividade;
+import br.jus.trf2.temis.cae.model.event.CaeEventoDeAtividadeAprovacao;
+import br.jus.trf2.temis.cae.model.event.CaeEventoDeAtividadeDeferimento;
+import br.jus.trf2.temis.cae.model.event.CaeEventoDeAtividadeIndeferimento;
+import br.jus.trf2.temis.cae.model.event.CaeEventoDeAtividadeInscricao;
+import br.jus.trf2.temis.cae.model.event.CaeEventoDeAtividadeReprovacao;
+import br.jus.trf2.temis.core.enm.MarcadorEnum;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
 public enum CaeSituacaoDaInscricaoNaAtividadeEnum implements IEnum {
-	DEFERIDA("Deferida"),
+	PENDENTE_DE_DEFERIMENTO("Pendente de Deferimento", MarcadorEnum.PENDENTE_DE_DEFERIMENTO,
+			CaeEventoDeAtividadeInscricao.class),
 	//
-	INDEFERIDA("Indeferida"),
+	DEFERIDA("Deferida", MarcadorEnum.DEFERIDO, CaeEventoDeAtividadeDeferimento.class),
 	//
-	APROVADA("Aprovada"),
+	INDEFERIDA("Indeferida", MarcadorEnum.INDEFERIDO, CaeEventoDeAtividadeIndeferimento.class),
 	//
-	REPROVADA("Reprovada");
+	APROVADA("Aprovada", MarcadorEnum.APROVADO, CaeEventoDeAtividadeAprovacao.class),
+	//
+	REPROVADA("Reprovada", MarcadorEnum.REPROVADO, CaeEventoDeAtividadeReprovacao.class);
 
 	private final String nome;
+	private final MarcadorEnum marcador;
+	private final Class<? extends CaeEventoDeAtividade> clazz;
 
 	@Override
 	public Long getId() {

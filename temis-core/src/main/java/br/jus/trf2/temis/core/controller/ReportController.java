@@ -121,7 +121,7 @@ public class ReportController {
 			if (fld.getAnnotation(Inject.class) != null && fld.getType().isAssignableFrom(EntityManager.class)) {
 				fld.set(acao, em);
 			}
-			
+
 			if (fld.getAnnotation(ManyToOne.class) != null) {
 				Object o = fld.get(acao);
 				Object odb = em.find(o.getClass(), dao.getIdentifier(o));
@@ -157,6 +157,10 @@ public class ReportController {
 				String csv = acao.gerarCsv();
 				return new ByteArrayDownload(csv.getBytes(StandardCharsets.ISO_8859_1), "text/csv",
 						localizador + ".csv");
+			case JSON_ARRAY:
+				String json = acao.gerarJsonArray();
+				return new ByteArrayDownload(json.getBytes(StandardCharsets.UTF_8), "application/json",
+						localizador + ".json");
 			case PDF:
 				byte[] pdf = acao.gerarPdf();
 				return new ByteArrayDownload(pdf, ArquivoPdf.APPLICATION_PDF, localizador + ".pdf");

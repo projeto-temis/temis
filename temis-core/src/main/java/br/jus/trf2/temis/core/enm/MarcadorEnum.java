@@ -39,6 +39,39 @@ public enum MarcadorEnum implements IEnum {
 	RECEBIDO("Recebido", "fa fa-bomb", "Recebido e aguardando o próximo andamento",
 			GrupoDeMarcadorEnum.AGUARDANDO_ANDAMENTO, true, true, TipoDeExibicaoDeMarcadorEnum.MARCADOS),
 	//
+	EM_CURSO("Em Curso", "far fa-clock", "O curso está sendo ministrado", GrupoDeMarcadorEnum.AGUARDANDO_ANDAMENTO,
+			true, true, TipoDeExibicaoDeMarcadorEnum.GERAL),
+	//
+	PENDENTE_DE_RESULTADOS("Pendente de Lançamento de Resultados", "far fa-clock",
+			"O curso foi ministrado mas os resultados ainda não foram lançados",
+			GrupoDeMarcadorEnum.AGUARDANDO_ANDAMENTO,
+			true, true, TipoDeExibicaoDeMarcadorEnum.MARCADOS),
+	//
+	PENDENTE_DE_DEFERIMENTO("Pendente de Deferimento", "far fa-clock",
+			"A inscrição está pendente de deferimento",
+			GrupoDeMarcadorEnum.AGUARDANDO_ANDAMENTO,
+			true, true, TipoDeExibicaoDeMarcadorEnum.MARCADOS),
+	//
+	DEFERIDO("Deferido", "far fa-clock",
+			"A inscrição foi deferida",
+			GrupoDeMarcadorEnum.AGUARDANDO_ANDAMENTO,
+			true, true, TipoDeExibicaoDeMarcadorEnum.MARCADOS),
+	//
+	INDEFERIDO("Indeferido", "far fa-clock",
+			"A inscrição foi indeferida",
+			GrupoDeMarcadorEnum.HISTORICO,
+			true, true, TipoDeExibicaoDeMarcadorEnum.MARCADOS),
+	//
+	APROVADO("Aprovado", "far fa-clock",
+			"A pessoa foi aprovada",
+			GrupoDeMarcadorEnum.HISTORICO,
+			true, true, TipoDeExibicaoDeMarcadorEnum.MARCADOS),
+	//
+	REPROVADO("Reprovado", "far fa-clock",
+			"A pessoa foi reprovada",
+			GrupoDeMarcadorEnum.HISTORICO,
+			true, true, TipoDeExibicaoDeMarcadorEnum.MARCADOS),
+	//
 	AGUARDANDO("Aguardando", "far fa-clock", "Aguardando o próximo andamento", GrupoDeMarcadorEnum.AGUARDANDO_ANDAMENTO,
 			true, true, TipoDeExibicaoDeMarcadorEnum.MARCADOS),
 	//
@@ -77,6 +110,9 @@ public enum MarcadorEnum implements IEnum {
 	//
 	JUNTADO("Juntado", "fa fa-lock", "Juntado a outro documento", GrupoDeMarcadorEnum.NENHUM, false, false,
 			TipoDeExibicaoDeMarcadorEnum.MARCADOS),
+	//
+	CONCLUIDO("Concluído", "fa fa-power-off", "Concluído", GrupoDeMarcadorEnum.NENHUM, false, false,
+			TipoDeExibicaoDeMarcadorEnum.GERAL),
 	//
 	BAIXADO("Arquivado", "fa fa-power-off", "Trâmite concluído", GrupoDeMarcadorEnum.NENHUM, false, false,
 			TipoDeExibicaoDeMarcadorEnum.MARCADOS),

@@ -1,5 +1,7 @@
 package br.jus.trf2.temis.iam.model;
 
+import java.util.Date;
+
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -14,13 +16,24 @@ import com.crivano.juia.annotations.Search;
 
 import br.jus.trf2.temis.core.Entidade;
 import br.jus.trf2.temis.core.util.Utils;
+import br.jus.trf2.temis.crp.model.CrpIdentidade;
+import br.jus.trf2.temis.crp.model.CrpLotacao;
+import br.jus.trf2.temis.crp.model.CrpOrgaoUsuario;
+import br.jus.trf2.temis.crp.model.CrpTipoDeLotacao;
 import br.jus.trf2.temis.iam.model.enm.TipoDeFuncaoDeConfiancaEnum;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.experimental.FieldNameConstants;
 
 @Entity
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
+@EqualsAndHashCode
+@FieldNameConstants
 @Global(singular = "Função de Confiança", plural = "Funções de Confiança", gender = Gender.SHE, locator = "iam-funcao")
 public class FuncaoDeConfianca extends Entidade {
 	@Id

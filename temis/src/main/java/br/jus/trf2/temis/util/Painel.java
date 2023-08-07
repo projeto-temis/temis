@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -39,8 +38,8 @@ public class Painel {
 			r.sigla = mobil.getCode();
 			r.descr = mobil.getDescr();
 
-			if (mobil.getUnidadeCadastrante() != null)
-				r.origem = mobil.getUnidadeCadastrante().getSigla();
+			if (mobil.getLotacaoTitular() != null)
+				r.origem = mobil.getLotacaoTitular().getSigla();
 
 			r.grupo = GrupoDeMarcadorEnum.NENHUM.name();
 			r.grupoOrdem = Integer.toString(GrupoDeMarcadorEnum.valueOf(r.grupo).ordinal());

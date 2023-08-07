@@ -1,5 +1,6 @@
 package br.jus.trf2.temis.core.action;
 
+import com.crivano.jbiz.IActor;
 import com.crivano.juia.annotations.Global;
 import com.crivano.juia.annotations.Global.Gender;
 
@@ -13,7 +14,7 @@ import lombok.Data;
 
 @Data
 @Global(singular = "Exclusão", plural = "Exclusões", gender = Gender.SHE, action = "Excluir", icon = "far fa-trash-alt")
-public class ExcluirMiniAction<E extends Entidade, T extends Evento<E, T>> implements Acao<E, Agente, T> {
+public class ExcluirMiniAction<E extends Entidade, T extends Evento<E, T>> implements Acao<E, IActor, T> {
 
 	@Override
 	public String getConfirmation(Entidade entity, Evento event) {
@@ -26,7 +27,7 @@ public class ExcluirMiniAction<E extends Entidade, T extends Evento<E, T>> imple
 	}
 
 	@Override
-	public void execute(Agente actor, Agente onBehalfOf, E entity, T event, Etiqueta tag) throws Exception {
+	public void execute(IActor actor, IActor onBehalfOf, E entity, T event, Etiqueta tag) throws Exception {
 		entity.removeChange(event);
 		ContextInterceptor.getDao().persist(entity);
 	}

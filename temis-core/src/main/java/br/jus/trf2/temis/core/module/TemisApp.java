@@ -29,6 +29,7 @@ import br.jus.trf2.temis.core.util.MimeTypeEnum;
 import br.jus.trf2.temis.core.util.SigaEntityManagerFactory;
 import br.jus.trf2.temis.core.util.TemisCaptionBuilder;
 import br.jus.trf2.temis.core.util.Utils;
+import br.jus.trf2.temis.crp.model.enm.CrpTipoDeConfiguracaoEnum;
 
 @ApplicationScoped
 public class TemisApp {
@@ -46,6 +47,7 @@ public class TemisApp {
 
 	public TemisApp() {
 		System.out.println("TEMIS APP CREATED");
+		CrpTipoDeConfiguracaoEnum.mapear(CrpTipoDeConfiguracaoEnum.values());
 	}
 
 	public void onStart(@Observes @Initialized(ApplicationScoped.class) Object pointless) {

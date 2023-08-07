@@ -15,7 +15,7 @@
 		<maven.compiler.source>1.8</maven.compiler.source>
 		<maven.compiler.target>1.8</maven.compiler.target>
 		<maven.build.timestamp.format>dd/MM/yyyy HH:mm</maven.build.timestamp.format>
-  		<openhtml.version>1.0.10</openhtml.version>
+		<openhtml.version>1.0.10</openhtml.version>
 	</properties>
 
 	<dependencies>
@@ -208,23 +208,27 @@
 			<artifactId>commons-csv</artifactId>
 			<version>1.10.0</version>
 		</dependency>
-		
 
 
-  	<dependency>
-  		<!-- ALWAYS required, usually included transitively. -->
-  		<groupId>com.openhtmltopdf</groupId>
-  		<artifactId>openhtmltopdf-core</artifactId>
-  		<version>${openhtml.version}</version>
-  	</dependency>
-  	
-  	<dependency>
-  		<!-- Required for PDF output. -->
-  		<groupId>com.openhtmltopdf</groupId>
-  		<artifactId>openhtmltopdf-pdfbox</artifactId>
-  		<version>${openhtml.version}</version>
-  	</dependency>
+		<dependency>
+			<!-- ALWAYS required, usually included transitively. -->
+			<groupId>com.openhtmltopdf</groupId>
+			<artifactId>openhtmltopdf-core</artifactId>
+			<version>${openhtml.version}</version>
+		</dependency>
 
+		<dependency>
+			<!-- Required for PDF output. -->
+			<groupId>com.openhtmltopdf</groupId>
+			<artifactId>openhtmltopdf-pdfbox</artifactId>
+			<version>${openhtml.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>commons-lang</groupId>
+			<artifactId>commons-lang</artifactId>
+			<version>2.6</version>
+		</dependency>
 
 		<dependency>
 			<groupId>javax.servlet</groupId>

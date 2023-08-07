@@ -9,18 +9,22 @@
             <div class="col-6" ref="action"></div>
             <div class="col-6"></div>
         </div>
-        <div ref="action"
-            :is="{ template: actTemplate, name: 'ActionForm', data() { return { act: this.$parent.act } }, methods: { proxify: function (v) { if (v === undefined) v = this.act; for (var k in v) { if (Object.prototype.hasOwnProperty.call(v, k)) { var val = v[k]; delete v[k]; this.$set(v, k, val); } } } } }"
-            @keydown.enter.native.prevent="actEnter"></div>
+        <div ref="action" :is="comp" @keydown.enter.native.prevent="actEnter"></div>
 
-        <div class="mt-3" v-html="table"></div>
+        <div v-if="table" v-html="table" class="mt-3"></div>
+
+        <pivot-table v-if="array" :pivotData="array" class="mt-3" />
     </div>
 </template>
 <script>
 import Utils from '../juia/mixins/utils.js'
+import PivotTable from '../components/PivotTable.vue'
 
 export default {
     name: "Report",
+    components: {
+        PivotTable
+    },
     mounted() {
         this.load();
         this.$on('validation-changed', (invalid) => {
@@ -42,12 +46,33 @@ export default {
             actInvalid: undefined,
             actShow: false,
             audit: false,
-            table: undefined
+            table: undefined,
+            array: undefined
         }
     },
     computed: {
         model() {
             return this.$store.state.model.find(i => i.locator === this.$route.params.locator)
+        },
+        comp() {
+            return {
+                template: this.actTemplate,
+                name: 'ActionForm',
+                data() {
+                    return { act: this.$parent.act }
+                },
+                methods: {
+                    proxify: function (v) {
+                        if (v === undefined)
+                            v = this.act;
+                        for (var k in v) {
+                            if (Object.prototype.hasOwnProperty.call(v, k)) {
+                                var val = v[k]; delete v[k]; this.$set(v, k, val);
+                            }
+                        }
+                    }
+                }
+            }
         }
     },
     methods: {
@@ -62,7 +87,8 @@ export default {
                             '<div class="modal-footer pl-0 pr-0 pb-0">' +
                             '<b-button name="csv" :disabled="obs.invalid" variant="secondary" @click.prevent="$parent.actEnter(\'CSV\')">Baixar CSV</b-button>' +
                             '<b-button name="pdf" :disabled="obs.invalid" variant="secondary" @click.prevent="$parent.actEnter(\'PDF\')">Baixar PDF</b-button>' +
-                            '<b-button name="ok" :disabled="obs.invalid" variant="primary" @click.prevent="$parent.actEnter(\'HTML\')">Exibir</b-button>' +
+                            '<b-button name="pivot" :disabled="obs.invalid" variant="primary" @click.prevent="$parent.actEnter(\'JSON_ARRAY\')">Tabela Dinâmica</b-button>' +
+                            '<b-button name="ok" :disabled="obs.invalid" variant="dark" @click.prevent="$parent.actEnter(\'HTML\')">Exibir</b-button>' +
                             '</div></validation-observer>';
                         this.actTitle = name;
                     } else {
@@ -85,21 +111,32 @@ export default {
             this.actOK(formato);
         },
         actRun: function (name, eventId, act, formato) {
+            this.array = undefined;
+            this.table = undefined;
             this.$set(this, 'act', act);
             const fd = Utils.formdata({ act: this.act })
             const url = `http://localhost:8080/temis/app/relatorio/${this.$route.params.locator}/exec?formato=${formato}&${fd}`
-            if (formato !== 'HTML') {
+            if (formato === 'PDF' || formato === 'CSV') {
                 var win = window.open(url, '_blank');
                 win.focus();
                 return
+            } else if (formato === 'HTML') {
+                this.$http.get(url).then(
+                    response => {
+                        this.table = response.data;
+                    },
+                    response => {
+                        this.$bvModal.msgBoxOk(response.data.errormsg)
+                    });
+            } else if (formato === 'JSON_ARRAY') {
+                this.$http.get(url).then(
+                    response => {
+                        this.array = response.data;
+                    },
+                    response => {
+                        this.$bvModal.msgBoxOk(response.data.errormsg)
+                    });
             }
-            this.$http.get(url).then(
-                response => {
-                    this.table = response.data;
-                },
-                response => {
-                    this.$bvModal.msgBoxOk(response.data.errormsg)
-                });
         },
 
     }

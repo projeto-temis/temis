@@ -15,6 +15,7 @@ import javax.persistence.spi.PersistenceUnitInfo;
 import org.hibernate.jpa.boot.internal.EntityManagerFactoryBuilderImpl;
 import org.hibernate.jpa.boot.internal.PersistenceUnitInfoDescriptor;
 
+import br.gov.jfrj.siga.cp.converter.CrpTipoDeServicoConverter;
 import br.jus.trf2.temis.core.util.Prop;
 import br.jus.trf2.temis.core.util.SigaEntityManagerFactory;
 
@@ -140,6 +141,8 @@ public class SigaEntityManagerFactoryImpl implements SigaEntityManagerFactory {
 
 	@Override
 	public void addClasses() {
+	    addClass(CrpTipoDeServicoConverter.class);
+	    
 //		addClass(DpCargo.class);
 //		addClass(DpFuncaoConfianca.class);
 //		addClass(DpLotacao.class);

@@ -21,7 +21,6 @@ import com.crivano.juia.annotations.Detail;
 import com.crivano.juia.annotations.DetailGroup;
 import com.crivano.juia.annotations.Global;
 import com.crivano.juia.annotations.Global.Gender;
-import com.crivano.juia.annotations.MenuList;
 import com.crivano.juia.annotations.Search;
 import com.crivano.juia.biz.IJuiaAction;
 
@@ -121,10 +120,10 @@ public class Processo extends Entidade {
 		super.addTags(set);
 
 		if (!isAutuado())
-			set.add(Etiqueta.of(null, this, null, getPessoaCadastrante(), getUnidadeCadastrante(),
+			set.add(Etiqueta.of(null, this, null, getPessoaTitular(), getLotacaoTitular(),
 					MarcadorEnum.EM_ELABORACAO, this.getBegin(), null));
 		if (isAutuado())
-			set.add(Etiqueta.of(null, this, null, getPessoaCadastrante(), getUnidadeCadastrante(),
+			set.add(Etiqueta.of(null, this, null, getPessoaTitular(), getLotacaoTitular(),
 					MarcadorEnum.AGUARDANDO_DECISAO, this.getBegin(), null));
 	}
 

@@ -12,11 +12,17 @@ import com.crivano.juia.annotations.Search;
 
 import br.jus.trf2.temis.core.Entidade;
 import br.jus.trf2.temis.core.util.Utils;
-import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.experimental.FieldNameConstants;
 
 @Entity
-@Data
+@Getter
+@Setter
+@EqualsAndHashCode
+@FieldNameConstants
 @NoArgsConstructor
 @Global(singular = "Cargo", plural = "Cargos", gender = Gender.HE, locator = "iam-cargo")
 public class Cargo extends Entidade {

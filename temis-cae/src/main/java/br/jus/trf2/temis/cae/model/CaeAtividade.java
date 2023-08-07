@@ -17,6 +17,7 @@ import javax.validation.constraints.NotNull;
 
 import org.joda.time.LocalDate;
 
+import com.crivano.jbiz.ITag;
 import com.crivano.jsync.IgnoreForSimilarity;
 import com.crivano.juia.annotations.Detail;
 import com.crivano.juia.annotations.DetailGroup;
@@ -44,9 +45,11 @@ import br.jus.trf2.temis.cae.model.event.CaeEventoDeAtividadeIndeferimento;
 import br.jus.trf2.temis.cae.model.event.CaeEventoDeAtividadeInscricao;
 import br.jus.trf2.temis.cae.model.event.CaeEventoDeAtividadeReprovacao;
 import br.jus.trf2.temis.core.Entidade;
+import br.jus.trf2.temis.core.Etiqueta;
 import br.jus.trf2.temis.core.Evento;
 import br.jus.trf2.temis.core.action.Auditar;
 import br.jus.trf2.temis.core.action.Editar;
+import br.jus.trf2.temis.core.enm.MarcadorEnum;
 import br.jus.trf2.temis.core.util.NoSerialization;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -77,12 +80,16 @@ public class CaeAtividade extends Entidade {
 		@ManyToOne(fetch = FetchType.LAZY)
 		private CaeAtividade atividade;
 
-		public <T extends CaeEventoDeAtividade> boolean temReferenciaDaClasse(Class<T> clazz) {
+		public <T extends CaeEventoDeAtividade> T getReferenciaDaClasse(Class<T> clazz) {
 			for (T p : getAtividade().getEventos(clazz)) {
 				if (p.getReferente() == this)
-					return true;
+					return p;
 			}
-			return false;
+			return null;
+		}
+
+		public <T extends CaeEventoDeAtividade> boolean temReferenciaDaClasse(Class<T> clazz) {
+			return getReferenciaDaClasse(clazz) != null;
 		}
 
 		public boolean isDeferida() {
@@ -100,7 +107,7 @@ public class CaeAtividade extends Entidade {
 		public boolean isReprovada() {
 			return temReferenciaDaClasse(CaeEventoDeAtividadeReprovacao.class);
 		}
-		
+
 		public CaeSituacaoDaInscricaoNaAtividadeEnum getSituacaoDaInscricao() {
 			if (isReprovada())
 				return CaeSituacaoDaInscricaoNaAtividadeEnum.REPROVADA;
@@ -110,7 +117,7 @@ public class CaeAtividade extends Entidade {
 				return CaeSituacaoDaInscricaoNaAtividadeEnum.INDEFERIDA;
 			if (isDeferida())
 				return CaeSituacaoDaInscricaoNaAtividadeEnum.DEFERIDA;
-			return null;
+			return CaeSituacaoDaInscricaoNaAtividadeEnum.PENDENTE_DE_DEFERIMENTO;
 		}
 	}
 
@@ -266,6 +273,54 @@ public class CaeAtividade extends Entidade {
 		set.add(new Editar());
 		set.add(new Auditar());
 		set.add(new CaeEventoDeAtividadeInscricao());
+	}
+
+	@Override
+	public void addTags(SortedSet<ITag> set) {
+		super.addTags(set);
+
+		if (!isCancelada()) {
+			set.add(Etiqueta.of(null, this, null, getPessoaTitular(), getLotacaoTitular(),
+					MarcadorEnum.EM_ELABORACAO, this.getBegin(), this.getDataDeInicio().toDate()));
+			set.add(Etiqueta.of(null, this, null, getPessoaTitular(), getLotacaoTitular(),
+					MarcadorEnum.EM_CURSO, this.getDataDeInicio().toDate(), this.getDataDeFim().toDate()));
+			if (isPendenteDeResultados()) {
+				set.add(Etiqueta.of(null, this, null, getPessoaTitular(), getLotacaoTitular(),
+						MarcadorEnum.PENDENTE_DE_RESULTADOS, this.getDataDeFim().toDate(), null));
+			} else {
+				set.add(Etiqueta.of(null, this, null, null, null,
+						MarcadorEnum.CONCLUIDO, this.getDataDeFim().toDate(), null));
+			}
+
+			// Acrescenta marcadores para todas as pessoas inscritas. Os marcadores
+			// indicarão a situação da inscrição, aprovação, reprovação, etc.
+			SortedSet<CaeEventoDeAtividadeInscricao> inscrs = getEventosAtivos(CaeEventoDeAtividadeInscricao.class);
+			for (CaeEventoDeAtividadeInscricao inscr : inscrs) {
+				CaeSituacaoDaInscricaoNaAtividadeEnum situacaoDaInscricao = inscr.getSituacaoDaInscricao();
+				CaeEventoDeAtividade referencia = inscr.getReferenciaDaClasse(situacaoDaInscricao.getClazz());
+				set.add(Etiqueta.of(null, this, null, inscr.getPessoa(), null,
+						situacaoDaInscricao.getMarcador(),
+						referencia != null ? referencia.getBegin() : inscr.getBegin(), null));
+			}
+		} else {
+			set.add(Etiqueta.of(null, this, null, null, null,
+					MarcadorEnum.CANCELADO, null, null));
+		}
+	}
+
+	private boolean isPendenteDeResultados() {
+		SortedSet<CaeEventoDeAtividadeInscricao> inscrs = getEventosAtivos(CaeEventoDeAtividadeInscricao.class);
+		for (CaeEventoDeAtividadeInscricao inscr : inscrs) {
+			switch (inscr.getSituacaoDaInscricao()) {
+			case APROVADA:
+			case REPROVADA:
+			case INDEFERIDA:
+				continue;
+			default:
+				return true;
+			}
+		}
+		return false;
 	}
 
 	public <T extends CaeEventoDeAtividade> SortedSet<T> getEventos(Class<T> clazz) {

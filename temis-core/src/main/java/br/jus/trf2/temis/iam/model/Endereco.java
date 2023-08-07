@@ -14,11 +14,17 @@ import com.crivano.juia.annotations.Search;
 import br.jus.trf2.temis.core.Entidade;
 import br.jus.trf2.temis.core.util.DescrBuilder;
 import br.jus.trf2.temis.iam.model.enm.UfEnum;
-import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.experimental.FieldNameConstants;
 
 @Entity
-@Data
+@Getter
+@Setter
+@NoArgsConstructor
+@EqualsAndHashCode
 @FieldNameConstants
 @Global(singular = "Endereço", plural = "Endereços", gender = Gender.HE, locator = "iam-endereco", sortField = Endereco.Fields.ordem, versionable = true)
 public class Endereco extends Entidade {

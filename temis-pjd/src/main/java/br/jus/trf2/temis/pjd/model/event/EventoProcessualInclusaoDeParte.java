@@ -10,6 +10,7 @@ import javax.persistence.Enumerated;
 import javax.persistence.ManyToOne;
 import javax.persistence.Transient;
 
+import com.crivano.jbiz.IActor;
 import com.crivano.jlogic.Expression;
 import com.crivano.jlogic.Not;
 import com.crivano.juia.annotations.Edit;
@@ -210,7 +211,7 @@ public class EventoProcessualInclusaoDeParte extends Processo.EventoProcessual {
 	}
 
 	@Override
-	public void execute(Agente actor, Agente onBehalfOf, Processo element, EventoProcessual evento, Etiqueta etiqueta)
+	public void execute(IActor actor, IActor onBehalfOf, Processo element, EventoProcessual evento, Etiqueta etiqueta)
 			throws Exception {
 		if (this.tipoPessoa == TipoDePessoaEnum.ENTIDADE && this.entidade != null) {
 			this.pessoa = this.entidade;
@@ -301,7 +302,7 @@ public class EventoProcessualInclusaoDeParte extends Processo.EventoProcessual {
 	}
 
 	@Override
-	public Expression getActiveMiniAction(Agente actor, Agente onBehalfOf, Processo element, Acao miniAction) {
+	public Expression getActiveMiniAction(IActor actor, IActor onBehalfOf, Processo element, Acao miniAction) {
 		if (miniAction instanceof EventoProcessualInclusaoDeDocumentoComprobatorioDeEpp)
 			return ParteDeveIncluirDocumentoComprobatorioDeEPP.of(element, this);
 		if (miniAction instanceof EventoProcessualInclusaoDeFontePagadora)
