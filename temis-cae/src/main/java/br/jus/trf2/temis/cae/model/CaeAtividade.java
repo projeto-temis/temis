@@ -39,6 +39,7 @@ import br.jus.trf2.temis.cae.model.enm.CaeParticipacaoEnum;
 import br.jus.trf2.temis.cae.model.enm.CaeSituacaoDaInscricaoNaAtividadeEnum;
 import br.jus.trf2.temis.cae.model.enm.CaeTipoDeAtividadeEnum;
 import br.jus.trf2.temis.cae.model.enm.CaeTurnoEnum;
+import br.jus.trf2.temis.cae.model.event.CaeAcaoDeAtividadeSeInscrever;
 import br.jus.trf2.temis.cae.model.event.CaeEventoDeAtividadeAprovacao;
 import br.jus.trf2.temis.cae.model.event.CaeEventoDeAtividadeDeferimento;
 import br.jus.trf2.temis.cae.model.event.CaeEventoDeAtividadeIndeferimento;
@@ -273,38 +274,42 @@ public class CaeAtividade extends Entidade {
 		set.add(new Editar());
 		set.add(new Auditar());
 		set.add(new CaeEventoDeAtividadeInscricao());
+		set.add(new CaeAcaoDeAtividadeSeInscrever());
 	}
 
 	@Override
 	public void addTags(SortedSet<ITag> set) {
 		super.addTags(set);
 
-		if (!isCancelada()) {
-			set.add(Etiqueta.of(null, this, null, getPessoaTitular(), getLotacaoTitular(),
-					MarcadorEnum.EM_ELABORACAO, this.getBegin(), this.getDataDeInicio().toDate()));
-			set.add(Etiqueta.of(null, this, null, getPessoaTitular(), getLotacaoTitular(),
-					MarcadorEnum.EM_CURSO, this.getDataDeInicio().toDate(), this.getDataDeFim().toDate()));
-			if (isPendenteDeResultados()) {
-				set.add(Etiqueta.of(null, this, null, getPessoaTitular(), getLotacaoTitular(),
-						MarcadorEnum.PENDENTE_DE_RESULTADOS, this.getDataDeFim().toDate(), null));
-			} else {
-				set.add(Etiqueta.of(null, this, null, null, null,
-						MarcadorEnum.CONCLUIDO, this.getDataDeFim().toDate(), null));
-			}
-
-			// Acrescenta marcadores para todas as pessoas inscritas. Os marcadores
-			// indicarão a situação da inscrição, aprovação, reprovação, etc.
-			SortedSet<CaeEventoDeAtividadeInscricao> inscrs = getEventosAtivos(CaeEventoDeAtividadeInscricao.class);
-			for (CaeEventoDeAtividadeInscricao inscr : inscrs) {
-				CaeSituacaoDaInscricaoNaAtividadeEnum situacaoDaInscricao = inscr.getSituacaoDaInscricao();
-				CaeEventoDeAtividade referencia = inscr.getReferenciaDaClasse(situacaoDaInscricao.getClazz());
-				set.add(Etiqueta.of(null, this, null, inscr.getPessoa(), null,
-						situacaoDaInscricao.getMarcador(),
-						referencia != null ? referencia.getBegin() : inscr.getBegin(), null));
-			}
-		} else {
+		if (isCancelada()) {
 			set.add(Etiqueta.of(null, this, null, null, null,
 					MarcadorEnum.CANCELADO, null, null));
+			return;
+		}
+		LocalDate hoje = new LocalDate();
+		if (this.getDataDeInicio() == null || !this.getDataDeInicio().isBefore(hoje))
+			set.add(Etiqueta.of(null, this, null, getPessoaTitular(), getLotacaoTitular(),
+					MarcadorEnum.EM_ELABORACAO, this.getBegin(), this.getDataDeInicio().toDate()));
+		if (this.getDataDeFim() == null || !this.getDataDeFim().isBefore(hoje))
+			set.add(Etiqueta.of(null, this, null, getPessoaTitular(), getLotacaoTitular(),
+					MarcadorEnum.EM_CURSO, this.getDataDeInicio().toDate(), this.getDataDeFim().toDate()));
+		if (isPendenteDeResultados()) {
+			set.add(Etiqueta.of(null, this, null, getPessoaTitular(), getLotacaoTitular(),
+					MarcadorEnum.PENDENTE_DE_RESULTADOS, this.getDataDeFim().toDate(), null));
+		} else {
+			set.add(Etiqueta.of(null, this, null, null, null,
+					MarcadorEnum.CONCLUIDO, this.getDataDeFim().toDate(), null));
+		}
+
+		// Acrescenta marcadores para todas as pessoas inscritas. Os marcadores
+		// indicarão a situação da inscrição, aprovação, reprovação, etc.
+		SortedSet<CaeEventoDeAtividadeInscricao> inscrs = getEventosAtivos(CaeEventoDeAtividadeInscricao.class);
+		for (CaeEventoDeAtividadeInscricao inscr : inscrs) {
+			CaeSituacaoDaInscricaoNaAtividadeEnum situacaoDaInscricao = inscr.getSituacaoDaInscricao();
+			CaeEventoDeAtividade referencia = inscr.getReferenciaDaClasse(situacaoDaInscricao.getClazz());
+			set.add(Etiqueta.of(null, this, null, inscr.getPessoa(), null,
+					situacaoDaInscricao.getMarcador(),
+					referencia != null ? referencia.getBegin() : inscr.getBegin(), null));
 		}
 	}
 

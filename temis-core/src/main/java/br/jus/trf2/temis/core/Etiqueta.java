@@ -3,6 +3,8 @@ package br.jus.trf2.temis.core;
 import java.util.Date;
 
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -51,6 +53,7 @@ public class Etiqueta implements ITag, Comparable<Etiqueta> {
 	@ManyToOne
 	private CrpLotacao unidade;
 
+	@Enumerated(EnumType.STRING)
 	@NotNull
 	@NonNull
 	private MarcadorEnum marcador;

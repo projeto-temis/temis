@@ -380,7 +380,7 @@ public abstract class ControllerSupport<T extends IEntidade> {
 			this.begin = Utils.calcularTempoRelativo(tag.getInicio());
 			this.finish = Utils.calcularTempoRelativo(tag.getTermino());
 			if (usuario != null) {
-				if (usuario.getPessoa() != null 
+				if (usuario.getPessoa() != null
 						&& usuario.getPessoa().equals(tag.getPessoa()))
 					this.bPessoa = true;
 //				if (usuario.getPapel() != null && usuario.getPapel().getUnidade() != null
@@ -482,7 +482,9 @@ public abstract class ControllerSupport<T extends IEntidade> {
 //		}
 
 		validate(data);
+		data.prePersistAndUpdate();
 		dao.persistEntidade(data);
+		data.updateTags();
 
 		result.use(Results.json()).from(data, "data").recursive().serialize();
 	}
@@ -651,6 +653,7 @@ public abstract class ControllerSupport<T extends IEntidade> {
 		try {
 			acao.execute(usuario, usuario, data, evento, etiqueta);
 			data.prePersistAndUpdate();
+			data.updateTags();
 		} catch (Exception ex) {
 			this.response.setStatus(400);
 			if (e instanceof BadRequestException)

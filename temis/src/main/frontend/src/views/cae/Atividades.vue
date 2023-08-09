@@ -3,7 +3,7 @@
     <fieldset class="juia juia-title">
       <div class="row align-items-center">
         <div class="col col-12">
-          <big class="juia">Painel</big>
+          <big class="juia">Atividades</big>
         </div>
       </div>
     </fieldset>
@@ -13,47 +13,10 @@
       </div>
     </div>
 
-    <div class="row d-print-none" v-if="!carregando &amp;&amp; lista.length > 0">
-      <div class="col col-12 col-md-auto">
-        <div class="input-group mt-3">
-          <div class="input-group-addon">
-            <span class="fa fa-search"></span>
-          </div>
-          <input type="text" class="form-control" placeholder="Filtrar" v-model="filtro"
-            ng-model-options="{ debounce: 200 }" />
-        </div>
-      </div>
-      <div class="col col-auto ml-auto">
-        <button v-if="(filtradosEMarcadosEAnotaveis || []).length" type="button" @click="anotarEmLote()"
-          class="btn btn-primary mt-3" title="">
-          <span class="fa fa-sticky-note-o d-none d-md-inline"></span>
-          Anotar&nbsp;
-          <span class="badge badge-pill badge-warning">{{
-            filtradosEMarcadosEAnotaveis.length
-          }}</span>
-        </button>
-        <button v-if="(filtradosEMarcadosEAssinaveis || []).length" type="button" @click="assinarComSenhaEmLote()"
-          class="btn btn-primary mt-3" title="">
-          <span class="fa fa-shield d-none d-md-inline"></span> Assinar&nbsp;
-          <span class="badge badge-pill badge-warning">{{
-            filtradosEMarcadosEAssinaveis.length
-          }}</span>
-        </button>
-        <button v-if="(filtradosEMarcadosETramitaveis || []).length" type="button" @click="tramitarEmLote()"
-          class="btn btn-primary mt-3" title="">
-          <span class="fa fa-paper-plane-o d-none d-md-inline"></span>
-          Tramitar&nbsp;
-          <span class="badge badge-pill badge-warning">{{
-            filtradosEMarcadosETramitaveis.length
-          }}</span>
-        </button>
-      </div>
-    </div>
-
     <div class="row mt-3" v-if="carregando &amp;&amp; primeiraCarga">
       <div class="col col-12">
         <p class="alert alert-warning">
-          <strong>Aguarde,</strong> carregando documentos...
+          <strong>Aguarde,</strong> carregando...
         </p>
       </div>
     </div>
@@ -61,7 +24,7 @@
     <div class="row mt-3" v-if="!carregando &amp;&amp; filtrados.length == 0">
       <div class="col col-12">
         <p class="alert alert-warning">
-          <strong>Atenção!</strong> Nenhum item no painel.
+          <strong>Atenção!</strong> Lista vazia.
         </p>
       </div>
     </div>
@@ -69,49 +32,42 @@
     <div class="row" v-if="filtrados.length > 0">
       <div class="col-sm-12">
         <table class="table table-sm table-borderless">
+          <thead>
+            <tr class="table-head">
+              <th style="text-align: center">Data</th>
+              <th>Tema</th>
+              <th>Tipo</th>
+              <th>Comissão</th>
+              <th>Período</th>
+              <th>Local</th>
+              <th></th>
+              <th v-show="filtradosTemAlgumErro"></th>
+            </tr>
+          </thead>
           <tbody>
-            <template v-for="f in filtrados">
-              <tr v-if="f.grupoExibir" class="table-group" :key="'grupo-title' + f.codigo">
-                <th colspan="6" class="pt-3 pb-0 pl-0">
-                  <h4 class="mb-1">{{ f.grupoNome }}</h4>
-                </th>
-              </tr>
-              <tr v-if="f.grupoExibir" class="table-head" :key="'grupo-header' + f.codigo">
-                <th style="text-align: center">
-                  <input type="checkbox" id="progress_checkall" name="progress_checkall" v-model="todos[f.grupo]"
-                    @change="marcarTodos(f.grupo)" />
-                </th>
-                <th class="d-none d-md-block">Tempo</th>
-                <th>Código</th>
-                <th class="d-none d-md-block">Descrição</th>
-                <th>Origem</th>
-                <th class="d-none d-md-block">Etiquetas</th>
-                <th v-show="filtradosTemAlgumErro">Atenção</th>
-              </tr>
-              <tr v-bind:class="{ odd: f.odd }" :key="'grupo-row' + f.codigo">
-                <td style="text-align: center">
-                  <input type="checkbox" v-model="f.checked" :disabled="f.disabled" />
-                </td>
-                <td class="d-none d-md-block" :title="f.datahora">
-                  {{ f.tempoRelativo }}
-                </td>
-                <td>
-                  <router-link :to="{ name: f.tipo + 'Show', params: { key: f.codigo } }">{{ f.sigla }}</router-link><span
-                    class="d-inline d-md-none"> - {{ f.descr }}</span>
-                </td>
-                <td class="d-none d-md-block">{{ f.descr }}</td>
-                <td>{{ f.origem }}</td>
-                <td class="d-none d-md-block" style="padding: 0;">
-                  <painel-tags :list="f.list" />
-                </td>
-                <td v-show="filtradosTemAlgumErro" style="color: red">
-                  {{ f.errormsg }}
-                </td>
-              </tr>
-              <tr v-if="f.grupoEspacar" class="table-group" :key="'grupo-space' + f.codigo">
-                <th colspan="6" class="pb-2 pb-0 pl-0"></th>
-              </tr>
-            </template>
+            <tr v-for="f in filtrados" :key="'grupo-row' + f.codigo">
+              <td style="text-align: center">
+                <input type="checkbox" v-model="f.checked" :disabled="f.disabled" />
+              </td>
+              <td class="d-none d-md-block" :title="f.datahora">
+                {{ f.tempoRelativo }}
+              </td>
+              <td>
+                <router-link :to="{ name: f.tipo + 'Show', params: { key: f.codigo } }">{{ f.sigla }}</router-link><span
+                  class="d-inline d-md-none"> - {{ f.descr }}</span>
+              </td>
+              <td class="d-none d-md-block">{{ f.descr }}</td>
+              <td>{{ f.origem }}</td>
+              <td class="d-none d-md-block" style="padding: 0;">
+                <painel-tags :list="f.list" />
+              </td>
+              <td v-show="filtradosTemAlgumErro" style="color: red">
+                {{ f.errormsg }}
+              </td>
+            </tr>
+            <tr v-if="f.grupoEspacar" class="table-group" :key="'grupo-space' + f.codigo">
+              <th colspan="6" class="pb-2 pb-0 pl-0"></th>
+            </tr>
           </tbody>
         </table>
       </div>

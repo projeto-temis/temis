@@ -35,17 +35,19 @@ import com.crivano.swaggerservlet.SwaggerUtils;
 import br.gov.jfrj.siga.cp.util.MatriculaUtils;
 import br.jus.trf2.temis.core.Arquivo;
 import br.jus.trf2.temis.core.Entidade;
+import br.jus.trf2.temis.core.Etiqueta;
 import br.jus.trf2.temis.core.Evento;
 import br.jus.trf2.temis.core.IEntidade;
 import br.jus.trf2.temis.crp.model.CrpConfiguracaoCache;
 import br.jus.trf2.temis.crp.model.CrpIdentidade;
+import br.jus.trf2.temis.crp.model.CrpLotacao;
+import br.jus.trf2.temis.crp.model.CrpPessoa;
 import br.jus.trf2.temis.crp.model.CrpServico;
 import br.jus.trf2.temis.crp.model.Historico;
 import br.jus.trf2.temis.crp.model.enm.CrpTipoDeConfiguracaoEnum;
 import br.jus.trf2.temis.crp.model.enm.CrpTipoDeIdentidadeEnum;
 import br.jus.trf2.temis.iam.model.Endereco;
 import br.jus.trf2.temis.iam.model.Pessoa;
-import br.jus.trf2.temis.iam.model.Unidade;
 import lombok.NonNull;
 
 @RequestScoped
@@ -71,7 +73,7 @@ public class Dao {
 		return em.createQuery(q).getResultList();
 	}
 
-	public List listarDocumentosPorPessoaOuLotacao(Pessoa pessoa, Unidade unidade) {
+	public List listarDocumentosPorPessoaOuLotacao(CrpPessoa pessoa, CrpLotacao unidade) {
 
 		long tempoIni = System.nanoTime();
 		Query query = em.createQuery("select e, t from Entidade e" + " inner join e.etiqueta t"
@@ -130,6 +132,12 @@ public class Dao {
 			if (id != null) {
 				// Acrescenta a versão antiga na lista para sincronismo
 				IEntidade oldData = em.find(data.getClass(), id);
+
+				// Verifica se houve alteração significativa entre a entidade atual e a versão
+				// persistida e retorna se não houver
+				if (data.isSyncSimilar(oldData, 0))
+					return;
+
 				sync.addOld(oldData);
 
 				// Varre todos os campos e localiza coleções de entidades
@@ -165,9 +173,6 @@ public class Dao {
 				ManyToOne m2o = fld.getAnnotation(ManyToOne.class);
 				OneToMany o2m = fld.getAnnotation(OneToMany.class);
 
-				if (fld.getName().equals("lotacaoTitular"))
-					System.out.println(fld.getName());
-
 				// Campo marcado com @ManyToOne
 				Object o = fld.get(data);
 				if (o != null && m2o != null && o.getClass().getAnnotation(Entity.class) != null) {
@@ -191,7 +196,7 @@ public class Dao {
 						int i = 0;
 						for (Object oOriginal : l) {
 							if (!(oOriginal instanceof Entidade))
-								return;
+								continue;
 							Entidade oOrig = (Entidade) oOriginal;
 							// Atribui o campo de ordenação, começando por 1
 							i++;
@@ -248,9 +253,16 @@ public class Dao {
 					// Remove a id para que seja criado um novo registro
 //					novo.setId(null);
 
+					// Remove as etiquetas do antigo, elas serão recalculadas quando o novo for
+					// criado
+					for (Etiqueta tag : antigo.getEtiqueta())
+						em.remove(tag);
+					antigo.getEtiqueta().clear();
+
 					// Transfere os eventos para essa nova entidade
 					try {
-						for (Field fld : ModeloUtils.getFieldList(antigo.getClass()))
+						for (Field fld : ModeloUtils.getFieldList(antigo.getClass())) {
+							// Move os eventos
 							if (fld.getName().equals("evento")) {
 								OneToMany o2m = fld.getAnnotation(OneToMany.class);
 								if (o2m != null && Utils.sorn(o2m.mappedBy()) != null) {
@@ -262,16 +274,20 @@ public class Dao {
 									}
 								}
 							}
+						}
 					} catch (Exception e) {
 						throw new RuntimeException("Não consegui transferir eventos", e);
 					}
+//					novo.getEvento().addAll((List) antigo.getEvento());
+//					antigo.getEvento().clear();
+
 					em.persist(novo);
+					em.flush();
+					em.refresh(novo);
 					return novo;
 				}
 			});
-		} catch (
-
-		Exception ex) {
+		} catch (Exception ex) {
 			throw new RuntimeException(ex);
 		}
 	}
@@ -394,7 +410,11 @@ public class Dao {
 	}
 
 	private <T extends Historico> T selecionarVersao(final T u, boolean atual) {
-		if (u.getTermino() == null)
+		if (u.getId() == null)
+			return null;
+		if (atual && u.getTermino() == null)
+			return u;
+		if (!atual && u.getId() != null && u.getId().equals(u.getIdInicial()))
 			return u;
 		CriteriaBuilder builder = em.getCriteriaBuilder();
 

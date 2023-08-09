@@ -7,11 +7,16 @@ import java.util.Map;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+import org.hibernate.Hibernate;
+
 import com.crivano.jbiz.IEvent;
+import com.crivano.jbiz.ITag;
+import com.crivano.jsync.SyncUtils;
 import com.crivano.jsync.Synchronizable;
 import com.crivano.juia.biz.IJuiaEntity;
 
 import br.jus.trf2.temis.core.util.ContextInterceptor;
+import br.jus.trf2.temis.core.util.ModeloUtils;
 
 public interface IEntidade extends IJuiaEntity, Synchronizable {
 
@@ -78,5 +83,67 @@ public interface IEntidade extends IJuiaEntity, Synchronizable {
 		}
 		return set;
 	};
+
+	@Override
+	default SortedSet<ITag> getTags() {
+		SortedSet<ITag> tags = IJuiaEntity.super.getTags();
+		for (Etiqueta t : (SortedSet<Etiqueta>) (SortedSet) tags) {
+			// Ajustar para pessoas e unidades iniciais
+			if (t.getPessoa() != null)
+				t.setPessoa(t.getPessoa().inicial());
+			if (t.getUnidade() != null)
+				t.setUnidade(t.getUnidade().inicial());
+		}
+		return tags;
+	}
+
+	default void updateTags() throws Exception {
+		SortedSet<Etiqueta> lOrig = (SortedSet<Etiqueta>) (SortedSet) getTags();
+		SortedSet<Etiqueta> lDest = getEtiqueta();
+		SortedSet<Etiqueta> lToRemove = new TreeSet<>();
+		;
+
+//		SortedSet<Etiqueta> lTemp = new TreeSet<>();
+//		lTemp.addAll(lDest);
+//		lDest.clear();
+		for (Etiqueta oDest : lDest) {
+			boolean encontrado = false;
+			// remover itens de destino que não existem na origem
+			for (Etiqueta oOrig : lOrig) {
+				if (ModeloUtils.semelhante(oOrig, oDest)) {
+					encontrado = true;
+					break;
+				}
+			}
+			if (!encontrado) {
+				lToRemove.add(oDest);
+				ContextInterceptor.getDao().remove(oDest);
+			}
+		}
+		lDest.removeAll(lToRemove);
+
+		for (Etiqueta oOrig : lOrig) {
+			boolean encontrado = false;
+			// remover itens de destino que não existem na origem,
+			// atualizar itens que existem nos dois e
+			for (Etiqueta oDest : lDest) {
+				if (ModeloUtils.semelhante(oOrig, oDest)) {
+					lDest.add(oDest);
+					encontrado = true;
+					break;
+				}
+			}
+			if (!encontrado) {
+				// inserir itens que só existem na origem
+				lDest.add(oOrig);
+			}
+		}
+	}
+
+	@Override
+	default boolean isSyncSimilar(Synchronizable obj, int level) {
+		return SyncUtils.alike((Synchronizable) Hibernate.unproxy(this), (Synchronizable) Hibernate.unproxy(obj),
+				level);
+	}
 
 }

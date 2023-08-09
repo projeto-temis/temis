@@ -11,10 +11,12 @@ public class Objeto {
 	@Override
 	public String toString() {
 		Map<Object, Boolean> visitedObjects = new IdentityHashMap<>();
-		return toString(this, visitedObjects);
+		return toString(this, visitedObjects, 0);
 	}
 
-	private String toString(Object object, Map<Object, Boolean> visitedObjects) {
+	private String toString(Object object, Map<Object, Boolean> visitedObjects, int depth) {
+		if (depth == 5)
+			return "...";
 		if (object == null) {
 			return "null";
 		}
@@ -25,12 +27,15 @@ public class Objeto {
 		}
 		visitedObjects.put(object, true);
 
+		if (objectClass.isAssignableFrom(String.class))
+			return object.toString();
+
 		if (objectClass.isArray()) {
-			return arrayToString(object, visitedObjects);
+			return arrayToString(object, visitedObjects, depth + 1);
 		}
 
 		if (object instanceof Collection) {
-			return collectionToString((Collection<?>) object, visitedObjects);
+			return collectionToString((Collection<?>) object, visitedObjects, depth + 1);
 		}
 
 		StringBuilder sb = new StringBuilder(objectClass.getSimpleName()).append(" [");
@@ -41,7 +46,8 @@ public class Objeto {
 				field.setAccessible(true);
 				try {
 					Object fieldValue = field.get(object);
-					sb.append(field.getName()).append("=").append(toString(fieldValue, visitedObjects)).append(", ");
+					sb.append(field.getName()).append("=").append(toString(fieldValue, visitedObjects, depth + 1))
+							.append(", ");
 				} catch (IllegalAccessException e) {
 					// Handle exception if needed
 				}
@@ -57,13 +63,13 @@ public class Objeto {
 		return sb.toString();
 	}
 
-	private String arrayToString(Object array, Map<Object, Boolean> visitedObjects) {
+	private String arrayToString(Object array, Map<Object, Boolean> visitedObjects, int depth) {
 		StringBuilder sb = new StringBuilder("[");
 		int length = Array.getLength(array);
 
 		for (int i = 0; i < length; i++) {
 			Object element = Array.get(array, i);
-			sb.append(toString(element, visitedObjects)).append(", ");
+			sb.append(toString(element, visitedObjects, depth + 1)).append(", ");
 		}
 
 		int lastIndex = sb.length() - 2;
@@ -75,10 +81,10 @@ public class Objeto {
 		return sb.toString();
 	}
 
-	private String collectionToString(Collection<?> collection, Map<Object, Boolean> visitedObjects) {
+	private String collectionToString(Collection<?> collection, Map<Object, Boolean> visitedObjects, int depth) {
 		StringBuilder sb = new StringBuilder("[");
 		for (Object element : collection) {
-			sb.append(toString(element, visitedObjects)).append(", ");
+			sb.append(toString(element, visitedObjects, depth + 1)).append(", ");
 		}
 
 		int lastIndex = sb.length() - 2;

@@ -36,15 +36,18 @@ import br.jus.trf2.temis.core.util.NoSerialization;
 import br.jus.trf2.temis.crp.model.CrpIdentidade;
 import br.jus.trf2.temis.crp.model.CrpLotacao;
 import br.jus.trf2.temis.crp.model.CrpPessoa;
-import lombok.Data;
+import br.jus.trf2.temis.crp.model.Historico;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.experimental.FieldNameConstants;
 
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
 @DiscriminatorColumn(discriminatorType = DiscriminatorType.STRING, length = 50)
-@Data
+@Getter
+@Setter
 @FieldNameConstants
-public abstract class Entidade extends Objeto implements IEntidade {
+public abstract class Entidade extends Objeto implements IEntidade, Historico<Entidade> {
 
 	@IgnoreForSimilarity
 	@Id
@@ -63,13 +66,17 @@ public abstract class Entidade extends Objeto implements IEntidade {
 	@IgnoreForSimilarity
 	private Long idInicial;
 
+	@IgnoreForSimilarity
 	@Search
 	private String codigo;
 
+	@IgnoreForSimilarity
 	@ManyToOne
 	private CrpIdentidade identidadeCadastrante;
+	@IgnoreForSimilarity
 	@ManyToOne
 	private CrpPessoa pessoaTitular;
+	@IgnoreForSimilarity
 	@ManyToOne
 	private CrpLotacao lotacaoTitular;
 
@@ -80,6 +87,7 @@ public abstract class Entidade extends Objeto implements IEntidade {
 	private SortedSet<Etiqueta> etiqueta = new TreeSet<>();
 
 	// Último Acesso
+	@IgnoreForSimilarity
 	private Date access;
 
 	// Última alteração
@@ -228,48 +236,6 @@ public abstract class Entidade extends Objeto implements IEntidade {
 	public void prePersistAndUpdate() throws Exception {
 		if (getBegin() == null)
 			setBegin(new Date());
-
-		SortedSet<Etiqueta> lOrig = (SortedSet<Etiqueta>) (SortedSet) getTags();
-		SortedSet<Etiqueta> lDest = getEtiqueta();
-		SortedSet<Etiqueta> lToRemove = new TreeSet<>();
-
-		SortedSet<Etiqueta> lTemp = new TreeSet<>();
-		lTemp.addAll(lDest);
-//		lDest.clear();
-		if (lOrig != null) {
-			for (Etiqueta oDest : lDest) {
-				boolean encontrado = false;
-				// remover itens de destino que não existem na origem
-				for (Etiqueta oOrig : lOrig) {
-					if (ModeloUtils.semelhante(oOrig, oDest)) {
-						encontrado = true;
-						break;
-					}
-				}
-				if (!encontrado) {
-					lToRemove.add(oDest);
-					ContextInterceptor.getDao().remove(oDest);
-				}
-			}
-			lDest.removeAll(lToRemove);
-
-			for (Etiqueta oOrig : lOrig) {
-				boolean encontrado = false;
-				// remover itens de destino que não existem na origem,
-				// atualizar itens que existem nos dois e
-				for (Etiqueta oDest : lTemp) {
-					if (ModeloUtils.semelhante(oOrig, oDest)) {
-						lDest.add(oDest);
-						encontrado = true;
-						break;
-					}
-				}
-				if (!encontrado) {
-					// inserir itens que só existem na origem
-					lDest.add(oOrig);
-				}
-			}
-		}
 	}
 
 	public Long getEntiId() {

@@ -13,8 +13,8 @@ import br.jus.trf2.temis.core.Entidade;
 import br.jus.trf2.temis.core.Etiqueta;
 import br.jus.trf2.temis.core.enm.GrupoDeMarcadorEnum;
 import br.jus.trf2.temis.core.util.Utils;
-import br.jus.trf2.temis.iam.model.Pessoa;
-import br.jus.trf2.temis.iam.model.Unidade;
+import br.jus.trf2.temis.crp.model.CrpLotacao;
+import br.jus.trf2.temis.crp.model.CrpPessoa;
 
 public class Painel {
 
@@ -23,7 +23,7 @@ public class Painel {
 	}
 
 	public static List<MesaItem> listarReferencias(TipoDePainelEnum tipo, Map<Entidade, List<Etiqueta>> references,
-			Pessoa pessoa, Unidade unidade, Date currentDate) {
+			CrpPessoa pessoa, CrpLotacao unidade, Date currentDate) {
 		List<MesaItem> l = new ArrayList<>();
 
 		for (Entidade mobil : references.keySet()) {
@@ -35,7 +35,7 @@ public class Painel {
 			r.tempoRelativo = Utils.calcularTempoRelativo(datahora);
 
 			r.codigo = mobil.getId();
-			r.sigla = mobil.getCode();
+			r.sigla = mobil.getCodigo();
 			r.descr = mobil.getDescr();
 
 			if (mobil.getLotacaoTitular() != null)

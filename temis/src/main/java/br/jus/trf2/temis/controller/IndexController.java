@@ -29,11 +29,12 @@ import br.jus.trf2.temis.core.enm.AmbienteEnum;
 import br.jus.trf2.temis.core.module.TemisApp;
 import br.jus.trf2.temis.core.module.TemisDownload;
 import br.jus.trf2.temis.core.module.TemisResourceKindEnum;
+import br.jus.trf2.temis.core.util.ContextInterceptor;
 import br.jus.trf2.temis.core.util.Dao;
 import br.jus.trf2.temis.core.util.Public;
 import br.jus.trf2.temis.core.util.Utils;
-import br.jus.trf2.temis.iam.model.Pessoa;
-import br.jus.trf2.temis.iam.model.Unidade;
+import br.jus.trf2.temis.crp.model.CrpPessoa;
+import br.jus.trf2.temis.crp.model.CrpUsuario;
 import br.jus.trf2.temis.iam.model.Usuario;
 import br.jus.trf2.temis.util.Painel;
 import br.jus.trf2.temis.util.Painel.MesaItem;
@@ -121,9 +122,10 @@ public class IndexController {
 	@Get
 	@Path("/app/painel")
 	public void painel() {
-		Pessoa pessoa = null;
-		Unidade unidade = null;
-		List<Object[]> l = dao.listarDocumentosPorPessoaOuLotacao(pessoa, unidade);
+		CrpUsuario usuario = assertUsuarioAutorizado();
+
+		List<Object[]> l = dao.listarDocumentosPorPessoaOuLotacao(usuario.getPessoa(),
+				usuario.getPessoa().getLotacao());
 
 		HashMap<Entidade, List<Etiqueta>> map = new HashMap<>();
 
@@ -131,13 +133,16 @@ public class IndexController {
 			Entidade entidade = (Entidade) reference[0];
 			Etiqueta etiqueta = (Etiqueta) reference[1];
 
+			entidade = dao.obterAtual(entidade);
+
 			if (!map.containsKey(entidade))
 				map.put(entidade, new ArrayList<Etiqueta>());
 
 			map.get(entidade).add(etiqueta);
 		}
 
-		List<MesaItem> list = Painel.listarReferencias(TipoDePainelEnum.UNIDADE, map, pessoa, unidade,
+		List<MesaItem> list = Painel.listarReferencias(TipoDePainelEnum.UNIDADE, map, usuario.getPessoa(),
+				usuario.getPessoa().getLotacao(),
 				dao.consultarDataEHoraDoServidor());
 		result.use(Results.json()).from(list).recursive().serialize();
 	}
@@ -242,4 +247,12 @@ public class IndexController {
 		}
 	}
 
+	private CrpUsuario assertUsuarioAutorizado() {
+		CrpUsuario usuario = new CrpUsuario();
+		CrpPessoa cadastrante = ContextInterceptor.getContext().getCadastrante();
+		usuario.setPessoa(cadastrante);
+		usuario.setEmpresa(cadastrante.getOrgaoUsuario());
+		usuario.setEmail(cadastrante.getEmail());
+		return usuario;
+	}
 }
